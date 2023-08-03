@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>File Upload Web App</title>
+</head>
+<body>
+  <h1>Upload Multiple Files and Input Message</h1>
+  <input type="file" id="fileInput" multiple>
+  <input type="text" id="messageInput" placeholder="Enter your message">
+  <input type="text" id="rules" placeholder="Enter what you want to generate">
+  <button onclick="uploadFiles()">Upload</button>
+  <div id="response"></div>
+
+  <script>
+    function uploadFiles() {
+      const filesInput = document.getElementById('fileInput');
+      const messageInput = document.getElementById('messageInput');
+      const files = filesInput.files;
+      const message = messageInput.value;
+      const rules = document.getElementById('rules').value;
+
+      const formData = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        formData.append('files', files[i]);
+      }
+      formData.append('message', message);
+      formData.append('rules', rules)
+
+      fetch('/generate', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('response').innerHTML = data;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('response').innerHTML = 'Error occurred while uploading files.';
+      });
+    }
+  </script>
+</body>
+</html>
