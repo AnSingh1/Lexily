@@ -17,14 +17,14 @@
       const messageInput = document.getElementById('messageInput');
       const files = filesInput.files;
       const message = messageInput.value;
-      const rules = document.getElementById('rules').value;
+      //const rules = document.getElementById('rules').value;
 
       const formData = new FormData();
       for (let i = 0; i < files.length; i++) {
         formData.append('files', files[i]);
       }
       formData.append('message', message);
-      formData.append('rules', rules)
+      //formData.append('rules', rules)
 
       fetch('/generate', {
         method: 'POST',
