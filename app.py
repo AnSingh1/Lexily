@@ -19,7 +19,9 @@ def index():
 @app.route('/generate', methods = ["POST", "GET"])
 def generate():
     flashcards = {}
-    rules = request.form['rules']
+    #rules not needed anymore, improving UX
+    #rules = request.form['rules']
+    
     message = request.form['message']
 
     content = []
@@ -75,9 +77,9 @@ def generate():
     Listen to the user's instruction carefully. 
     Before and after each question, use the <question> tag.
     Before and after each answer, use the <answer> tag. """
-
-    initial = f"""You are the follow this instruction:
+    #You are the follow this instruction:
     {rules}. 
+    initial = f"""
     All of the information is below."""
     for count, conten in enumerate(content):
         initial+=f""" Item {count+1}: 
