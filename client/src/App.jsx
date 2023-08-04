@@ -11,13 +11,15 @@ import Test from "./Pages/Test/Test";
 export default function App() {
   return (
     <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/test" element={<Test />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-      </Routes>
+      <div className="flex min-h-screen flex-col">
+        <Header />
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/test" element={<Test />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Routes>
+      </div>
     </Router>
   );
 }
