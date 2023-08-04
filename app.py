@@ -16,22 +16,31 @@ firebase_admin.initialize_app(cred, {'databaseURL': 'https://lexily-9bc6b-defaul
 
 app = Flask(__name__)
 
-
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serveReactApp(path):
+    print(path)
     if path.startswith('api/') or path.startswith('static/'):
         return app.send_static_file(path)
+    
+    # Use the correct MIME types for JavaScript and CSS files
+    if path.endswith('.js'):
+        return send_from_directory('templates', path, mimetype='application/javascript')
+    elif path.endswith('.css'):
+        return send_from_directory('templates', path, mimetype='text/css')
+    elif path.endswith('.svg'):
+        return send_from_directory('templates', path, mimetype='image/svg+xml')
+    
     else:
-        return send_from_directory('./build', 'index.html')
+        print("Queued website")
+        return send_from_directory('templates/', 'index.html')
 
 @app.route('/generate', methods = ["POST"])
 def generate():
-    data = [90, 3, "History"]
-    #data = request.form
+    data = request.form
 
     #HOW it should be sorted
-    #difficulty should be out of 100
+    #difficulty should be out of 10
     difficulty = data[0]
     numTests = data[1]
     theme = data[2]
@@ -60,7 +69,7 @@ def generate():
     Mark the title with the <title> tag and close the title with the </title> tag. Only the title should be marked with this tag.
     """
 
-    initial = f"""The user has done {data[1]} tests and wants a passage with difficulty of {data[0]}/100. The theme preferred is {data[2]}"""
+    initial = f"""The user has done {data[1]} tests and wants a passage with difficulty of {data[0]}/10. The theme preferred is {data[2]}"""
 
     messages = [{"role": "system", "content": instruction}, {"role": "user", "content": initial}]
 
@@ -142,7 +151,7 @@ def signup():
 
         return jsonify({"message": "success", "email": data[1]})
 
-@app.route('/login')
+@app.route('/login', methods = ["POST"])
 def login():
     data = json.loads(request.form['data'])
 
