@@ -589,8 +589,16 @@ input[type="radio"]:checked::before {
   bottom: .25em;
 }
 
+.left-0{
+  left: 0px;
+}
+
 .left-1\/2{
   left: 50%;
+}
+
+.top-0{
+  top: 0px;
 }
 
 .mx-auto{
@@ -610,28 +618,36 @@ input[type="radio"]:checked::before {
   display: flex;
 }
 
+.h-4{
+  height: 1rem;
+}
+
+.h-full{
+  height: 100%;
+}
+
 .min-h-screen{
   min-height: 100vh;
+}
+
+.w-3{
+  width: 0.75rem;
 }
 
 .w-\[8\.5in\]{
   width: 8.5in;
 }
 
-.w-full{
-  width: 100%;
-}
-
 .w-\[85\%\]{
   width: 85%;
 }
 
-.max-w-\[706px\]{
-  max-width: 706px;
+.w-full{
+  width: 100%;
 }
 
-.-translate-x-\[10\%\]{
-  --tw-translate-x: -10%;
+.-translate-x-1\/2{
+  --tw-translate-x: -50%;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
@@ -640,9 +656,20 @@ input[type="radio"]:checked::before {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-.-translate-x-1\/2{
-  --tw-translate-x: -50%;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+@keyframes bounce{
+  0%, 100%{
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8,0,1,1);
+  }
+
+  50%{
+    transform: none;
+    animation-timing-function: cubic-bezier(0,0,0.2,1);
+  }
+}
+
+.animate-bounce{
+  animation: bounce 1s infinite;
 }
 
 .cursor-default{
@@ -675,6 +702,10 @@ input[type="radio"]:checked::before {
 
 .gap-12{
   gap: 3rem;
+}
+
+.gap-3{
+  gap: 0.75rem;
 }
 
 .gap-6{
@@ -719,6 +750,10 @@ input[type="radio"]:checked::before {
   background-color: rgb(64 64 64 / var(--tw-bg-opacity));
 }
 
+.bg-test-lgt\/20{
+  background-color: rgb(95 99 102 / 0.2);
+}
+
 .bg-white{
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
@@ -743,9 +778,9 @@ input[type="radio"]:checked::before {
   padding-right: 1.5rem;
 }
 
-.px-\[138px\]{
-  padding-left: 138px;
-  padding-right: 138px;
+.px-\[9vw\]{
+  padding-left: 9vw;
+  padding-right: 9vw;
 }
 
 .py-24{
@@ -766,11 +801,6 @@ input[type="radio"]:checked::before {
 .py-\[2px\]{
   padding-top: 2px;
   padding-bottom: 2px;
-}
-
-.px-\[9vw\]{
-  padding-left: 9vw;
-  padding-right: 9vw;
 }
 
 .text-center{
