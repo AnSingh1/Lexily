@@ -581,6 +581,10 @@ input[type="radio"]:checked::before {
   position: relative;
 }
 
+.sticky{
+  position: sticky;
+}
+
 .bottom-0{
   bottom: 0px;
 }
@@ -599,6 +603,10 @@ input[type="radio"]:checked::before {
 
 .top-0{
   top: 0px;
+}
+
+.z-50{
+  z-index: 50;
 }
 
 .mx-auto{
@@ -622,8 +630,16 @@ input[type="radio"]:checked::before {
   height: 1rem;
 }
 
+.h-6{
+  height: 1.5rem;
+}
+
 .h-full{
   height: 100%;
+}
+
+.h-8{
+  height: 2rem;
 }
 
 .min-h-screen{
@@ -712,6 +728,10 @@ input[type="radio"]:checked::before {
   gap: 1.5rem;
 }
 
+.gap-4{
+  gap: 1rem;
+}
+
 .rounded{
   border-radius: 0.25rem;
 }
@@ -728,12 +748,20 @@ input[type="radio"]:checked::before {
   border-width: 1px;
 }
 
+.border-b-\[1px\]{
+  border-bottom-width: 1px;
+}
+
 .border-gray-border\/\[\.08\]{
   border-color: rgb(33 36 34 / .08);
 }
 
 .border-gray-border\/\[\.16\]{
   border-color: rgb(33 36 34 / .16);
+}
+
+.border-b-gray-border\/\[\.18\]{
+  border-bottom-color: rgb(33 36 34 / .18);
 }
 
 .bg-brand{
@@ -803,6 +831,11 @@ input[type="radio"]:checked::before {
   padding-bottom: 2px;
 }
 
+.py-4{
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
 .text-center{
   text-align: center;
 }
@@ -843,6 +876,11 @@ input[type="radio"]:checked::before {
   line-height: 1.25rem;
 }
 
+.text-2xl{
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
 .font-medium{
   font-weight: 500;
 }
@@ -870,13 +908,34 @@ input[type="radio"]:checked::before {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+.text-test-lgt\/75{
+  color: rgb(95 99 102 / 0.75);
+}
+
 .shadow-lg{
   --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.hover\:text-test-lgt:hover{
+  --tw-text-opacity: 1;
+  color: rgb(95 99 102 / var(--tw-text-opacity));
+}
+
+.hover\:text-test-lgt\/75:hover{
+  color: rgb(95 99 102 / 0.75);
+}
+
 @media (min-width: 640px){
+  .sm\:border-\[1px\]{
+    border-width: 1px;
+  }
+
+  .sm\:border-none{
+    border-style: none;
+  }
+
   .sm\:text-left{
     text-align: left;
   }

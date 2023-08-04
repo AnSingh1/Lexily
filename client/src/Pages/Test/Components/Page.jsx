@@ -7,7 +7,7 @@ import Question from "./Question";
 
 export default function Page() {
   return (
-    <div className="relative flex w-[8.5in] flex-col gap-12 rounded border-[1px] border-gray-border/[.16] px-[9vw] py-24">
+    <div className="relative flex w-[8.5in] flex-col gap-12 rounded border-gray-border/[.16] px-[9vw] py-24 sm:border-[1px]">
       <div className="text-center font-poppins">
         <h1 className="text-3xl text-test-dark">The Great Women Meet</h1>
         <h2 className="text-lg uppercase text-test-lgt">Simone Ribke</h2>
