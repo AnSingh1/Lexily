@@ -589,6 +589,10 @@ input[type="radio"]:checked::before {
   bottom: .25em;
 }
 
+.left-1\/2{
+  left: 50%;
+}
+
 .mx-auto{
   margin-left: auto;
   margin-right: auto;
@@ -618,6 +622,10 @@ input[type="radio"]:checked::before {
   width: 100%;
 }
 
+.w-\[85\%\]{
+  width: 85%;
+}
+
 .max-w-\[706px\]{
   max-width: 706px;
 }
@@ -632,8 +640,25 @@ input[type="radio"]:checked::before {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+.-translate-x-1\/2{
+  --tw-translate-x: -50%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.cursor-default{
+  cursor: default;
+}
+
+.cursor-pointer{
+  cursor: pointer;
+}
+
 .flex-col{
   flex-direction: column;
+}
+
+.items-start{
+  align-items: flex-start;
 }
 
 .items-center{
@@ -685,14 +710,18 @@ input[type="radio"]:checked::before {
   background-color: rgb(62 180 137 / var(--tw-bg-opacity));
 }
 
-.bg-white{
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+.bg-brand\/50{
+  background-color: rgb(62 180 137 / 0.5);
 }
 
 .bg-test-dark{
   --tw-bg-opacity: 1;
   background-color: rgb(64 64 64 / var(--tw-bg-opacity));
+}
+
+.bg-white{
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
 .p-6{
@@ -702,6 +731,11 @@ input[type="radio"]:checked::before {
 .px-12{
   padding-left: 3rem;
   padding-right: 3rem;
+}
+
+.px-2{
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .px-6{
@@ -729,19 +763,14 @@ input[type="radio"]:checked::before {
   padding-bottom: 1.5rem;
 }
 
-.px-2{
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-}
-
-.py-1{
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-}
-
 .py-\[2px\]{
   padding-top: 2px;
   padding-bottom: 2px;
+}
+
+.px-\[9vw\]{
+  padding-left: 9vw;
+  padding-right: 9vw;
 }
 
 .text-center{
@@ -752,17 +781,21 @@ input[type="radio"]:checked::before {
   font-family: poppins, sans-serif;
 }
 
-.font-sans{
-  font-family: Open Sans, sans-serif;
-}
-
 .font-roboto{
   font-family: roboto, sans-serif;
+}
+
+.font-sans{
+  font-family: Open Sans, sans-serif;
 }
 
 .text-3xl{
   font-size: 1.875rem;
   line-height: 2.25rem;
+}
+
+.text-\[10px\]{
+  font-size: 10px;
 }
 
 .text-base{
@@ -778,10 +811,6 @@ input[type="radio"]:checked::before {
 .text-sm{
   font-size: 0.875rem;
   line-height: 1.25rem;
-}
-
-.text-\[10px\]{
-  font-size: 10px;
 }
 
 .font-medium{
@@ -811,14 +840,14 @@ input[type="radio"]:checked::before {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
-.shadow-xl{
-  --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-
 .shadow-lg{
   --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+@media (min-width: 640px){
+  .sm\:text-left{
+    text-align: left;
+  }
 }
