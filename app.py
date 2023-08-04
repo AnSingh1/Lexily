@@ -1,127 +1,112 @@
-import os
-from flask import Flask, render_template, request, jsonify
-import re
-from PyPDF2 import PdfReader
-from werkzeug.utils import secure_filename
-from bs4 import BeautifulSoup
+from flask import Flask, render_template, request, jsonify, send_from_directory
+import firebase_admin
+from firebase_admin import db, credentials
+import json
+
 import openai
 from dotenv import load_dotenv
-load_dotenv(dotenv_path="key.env")
+import os
+
+load_dotenv()
 openai.api_key = os.environ.get('API_KEY')
 
-cur_path = "/home/path/to/file"
+cred = credentials.Certificate("key.json")
+firebase_admin.initialize_app(cred, {'databaseURL': 'https://lexily-9bc6b-default-rtdb.firebaseio.com/'})
 
 app = Flask(__name__)
-@app.route('/')
-def index():
-    return render_template('index.html')
 
 
-@app.route('/generate', methods = ["POST", "GET"])
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serveReactApp(path):
+    if path.startswith('api/') or path.startswith('static/'):
+        return app.send_static_file(path)
+    else:
+        return send_from_directory('./build', 'index.html')
+
+@app.route('/generate')
 def generate():
-    flashcards = {}
-    # rules = request.form['rules']
-    message = request.form['message']
-
-    content = []
-    if message != "":
-        content = [message]
-
-    #file should be a list since there are multiple files
-
+    #call firebase
     try:
-        files = request.files.getlist('files')
-
-        for file in files:
-            print(file)
-            name = file.filename
-            file_path = f'{cur_path}/tempfiles/' + secure_filename(file.filename) 
-            file.save(file_path)
-
-            if name.lower().endswith('.pdf'):
-                with open(file_path, 'rb') as pdf_file:
-                    reader = PdfReader(pdf_file)
-                    pdf_content = ""
-
-                    for page in reader.pages:
-                        pdf_content += page.extract_text()
-
-                #removing all of the html tags
-                soup = BeautifulSoup(pdf_content, "html.parser")
-                file_content = soup.get_text()
-                content.append(file_content)
-
-                os.remove(file_path)
-
-            
-    except Exception as e:
-        print(e)
-        return "HI"
-
-    
-
-    #handle all ocr and append it to content
-    
-
-
-    
-
-
-
-
-
-    #chat gpt part
-    instruction = """You are a flashcard generator that generates
-    flashcards from the following information I will post.
-    Listen to the user's instruction carefully. 
-    Before and after each question, use the <question> tag.
-    Before and after each answer, use the <answer> tag. """
-
-    #You are the follow this instruction:
-
-    initial = f"""
-    All of the information is below."""
-    for count, conten in enumerate(content):
-        initial+=f""" Item {count+1}: 
-        {conten}
-        """
-    print(initial)
-
-
-    messages = [{"role": "system", "content": instruction}, 
-                {"role": "user", "content": initial}]
+        #getting difficulty
+        pass
+    except:
+        difficulty = 50
     
     try:
-        response = openai.ChatCompletion.create(
-            model = "gpt-3.5-turbo-16k",
-            messages = messages
-        )
-
-        result = response["choices"][0]["message"]["content"]
-        # print(result)
-
-        #extracting the result
-        question_pattern = re.compile(r"<question>(.*?)<\/question>", re.DOTALL)
-        answer_pattern = re.compile(r"<answer>(.*?)<\/answer>", re.DOTALL)
-
-        questions = question_pattern.findall(result)
-        answers = answer_pattern.findall(result)
-
-        for i in range(len(questions)):
-            flashcards[questions[i]] = answers[i]
-        print(flashcards)
+        #getting number of times attempted
+        pass
+    except:
+        number = 0
 
 
-        return jsonify(flashcards)
 
+@app.route('/signup', methods = ["POST"])
+def signup():
+    data = json.loads(request.form['data'])
 
-    except Exception as e:
-        print(e)
+    #HOW it should be sorted
+    name = data[0]
+    email = data[1]
+    password = data[2]
+    difficulty = data[3]
+    numTests = data[4]
 
-        if "The model's maximum context length is" in e:
-            return "Remove some info"
+    if getUserData(data[1]):
+        return jsonify({"message": "Account already exists"})
+    else:
+        addUser(data[0], data[1], data[2], data[3], data[4])
 
-        return "SEE"
+        return jsonify({"message": "success", "email": data[1]})
 
+@app.route('/login')
+def login():
+    data = json.loads(request.form['data'])
 
-app.run(debug=True)
+    #HOW it should be sorted
+
+    email = data[0]
+    password = data[1]
+
+    user_data = getUserData(data[0])
+    if user_data:
+        if user_data['password'] == data[1]:
+            return jsonify({"message": "success", "email": data[0]})
+        else:
+            return jsonify({"message": "incorrect password"})
+    else:
+        return jsonify({"message": "Account does not exist"})
+
+@app.route('/update')
+def updateUser():
+    email = request.form.get('email')
+    difficulty = request.form.get('difficulty')
+    numTests = request.form.get('numTests')
+
+    ref = db.reference('users')
+    users_ref = ref.child(email.replace('.', ','))
+
+    users_ref.update({
+        "difficulty": difficulty,
+        "numTests": numTests,
+    })
+
+def addUser(name, email, password, difficulty, numTests):
+    ref = db.reference('users')
+    users_ref = ref.child(email.replace('.', ','))
+    users_ref.set({
+        "name": name,
+        "email": email,
+        "password": password,
+        "difficulty": difficulty,
+        "numTests": numTests,
+    })
+
+def getUserData(email):
+    ref = db.reference('users')
+    users_ref = ref.child(email.replace('.', ','))  # Replace '.' with ','
+    user_data = users_ref.get()
+    if user_data:
+        return user_data
+    else:
+        return False
