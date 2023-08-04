@@ -19,22 +19,33 @@
     height: 16px;
     border: 2px solid theme("accentColor.test-lgt");
     border-radius: 50%;
-    translate: 0 2px;
-    position: relative;
+    translate: 0 1px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   input[type="radio"]::before {
     content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    translate: -50% -50%;
-    width: 9px;
-    height: 9px;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     background-color: theme("accentColor.brand");
+    box-shadow:
+      1px 1px inset white,
+      -1px -1px inset white,
+      1px -1px inset white,
+      -1px 1px inset white;
     scale: 0;
     transition: scale 100ms ease-in-out;
+  }
+
+  html.dark input[type="radio"]::before {
+    box-shadow:
+      1px 1px inset theme("accentColor.dark-card"),
+      -1px -1px inset theme("accentColor.dark-card"),
+      1px -1px inset theme("accentColor.dark-card"),
+      -1px 1px inset theme("accentColor.dark-card");
   }
 
   input[type="radio"]:checked {
