@@ -1,16 +1,21 @@
 import React from "react";
 
-import story from "../../../Utils/story";
-import question from "../../../Utils/question";
-
 import Question from "./Question";
 
+import data from "../../../Utils/data"; // Temporary until received from backend
+
 export default function Page() {
+  const section = data[1];
+  const story = section.section
+    .replace("\n", "")
+    .replaceAll("\n\n", "\n")
+    .slice(0, -1);
+
   return (
-    <div className="relative flex w-[8.5in] flex-col gap-12 rounded border-gray-border/[.16] px-[9vw] py-24 sm:border-[1px]">
+    <div className="relative mb-80 mt-12 flex w-[8.5in] flex-col gap-12 rounded border-gray-border/[.16] px-[9vw] py-24 sm:border-[1px]">
       <div className="text-center font-poppins">
-        <h1 className="text-3xl text-test-dark">The Great Women Meet</h1>
-        <h2 className="text-lg uppercase text-test-lgt">Simone Ribke</h2>
+        <h1 className="text-3xl text-test-dark">{data[0].title}</h1>
+        <h2 className="text-lg uppercase text-test-lgt">{section.subTitle}</h2>
       </div>
       <svg
         width="60"
@@ -40,9 +45,10 @@ export default function Page() {
       </div>
       <Question
         data={{
-          ...question,
+          question: section.question,
+          options: section.options,
           questionNumber: 1,
-          totalQuestions: 4,
+          totalQuestions: section.options.length,
         }}
         onSubmit={(_) => {
           console.log("submit");

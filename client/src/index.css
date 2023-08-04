@@ -473,6 +473,37 @@ input[type="radio"]:checked::before {
   scale: 1;
 }
 
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+  overflow: visible;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 50vw;
+  padding: 2px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 *, ::before, ::after{
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
@@ -618,6 +649,14 @@ input[type="radio"]:checked::before {
   margin-bottom: 1rem;
 }
 
+.mb-80{
+  margin-bottom: 20rem;
+}
+
+.ml-auto{
+  margin-left: auto;
+}
+
 .mr-3{
   margin-right: 0.75rem;
 }
@@ -626,8 +665,8 @@ input[type="radio"]:checked::before {
   margin-right: .75em;
 }
 
-.ml-auto{
-  margin-left: auto;
+.mt-12{
+  margin-top: 3rem;
 }
 
 .mt-4{
@@ -644,6 +683,19 @@ input[type="radio"]:checked::before {
 
 .h-full{
   height: 100%;
+}
+
+.h-max{
+  height: -moz-max-content;
+  height: max-content;
+}
+
+.h-screen{
+  height: 100vh;
+}
+
+.max-h-screen{
+  max-height: 100vh;
 }
 
 .min-h-screen{
@@ -677,6 +729,10 @@ input[type="radio"]:checked::before {
 
 .translate-y-\[85\%\]{
   --tw-translate-y: 85%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.transform{
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
@@ -742,6 +798,18 @@ input[type="radio"]:checked::before {
 
 .gap-8{
   gap: 2rem;
+}
+
+.overflow-hidden{
+  overflow: hidden;
+}
+
+.overflow-y-auto{
+  overflow-y: auto;
+}
+
+.overflow-y-scroll{
+  overflow-y: scroll;
 }
 
 .rounded{
@@ -914,6 +982,10 @@ input[type="radio"]:checked::before {
   text-transform: uppercase;
 }
 
+.text-brand\/75{
+  color: rgb(62 180 137 / 0.75);
+}
+
 .text-red-500{
   --tw-text-opacity: 1;
   color: rgb(239 68 68 / var(--tw-text-opacity));
@@ -933,10 +1005,6 @@ input[type="radio"]:checked::before {
   color: rgb(95 99 102 / 0.5);
 }
 
-.text-test-lgt\/75{
-  color: rgb(95 99 102 / 0.75);
-}
-
 .text-white{
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
@@ -952,9 +1020,15 @@ input[type="radio"]:checked::before {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
-.hover\:text-test-lgt:hover{
+.shadow-sm{
+  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.hover\:text-brand:hover{
   --tw-text-opacity: 1;
-  color: rgb(95 99 102 / var(--tw-text-opacity));
+  color: rgb(62 180 137 / var(--tw-text-opacity));
 }
 
 .hover\:text-test-lgt\/75:hover{
