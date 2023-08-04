@@ -1,3 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500&family=Open+Sans&family=Poppins&family=Roboto&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  input[type="radio"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    font: inherit;
+    color: currentColor;
+    width: 16px;
+    height: 16px;
+    border: 2px solid theme("accentColor.test-lgt");
+    border-radius: 50%;
+    translate: 0 2px;
+    position: relative;
+  }
+
+  input[type="radio"]::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: theme("accentColor.brand");
+    scale: 0;
+    transition: scale 100ms ease-in-out;
+  }
+
+  input[type="radio"]:checked {
+    border-color: theme("accentColor.brand");
+  }
+
+  input[type="radio"]:checked::before {
+    scale: 1;
+  }
+}
