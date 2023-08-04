@@ -15,11 +15,11 @@ export default function Question({ data, onSubmit }) {
   };
 
   return (
-    <div className="absolute bottom-0 left-1/2 flex w-[85%] -translate-x-1/2 translate-y-[85%] flex-col gap-6 rounded-2xl border-[1px] border-gray-border/[.08] bg-white px-12 py-6 font-poppins shadow-lg">
-      <h3 className="text-center text-lg text-test-dark sm:text-left">
+    <div className="absolute bottom-0 left-1/2 flex w-[85%] -translate-x-1/2 translate-y-[85%] flex-col gap-6 rounded-2xl border-[1px] border-gray-border/[.08] bg-white px-12 py-6 font-poppins shadow-lg dark:bg-dark-card">
+      <h3 className="text-center text-lg text-test-dark dark:text-dark-test-dark sm:text-left">
         {data.question}
       </h3>
-      <ul className="flex flex-col items-start text-base text-test-lgt">
+      <ul className="flex flex-col items-start text-base text-test-lgt dark:text-dark-test-lgt">
         {data.options.map((o, i) => {
           return (
             <li key={i}>
@@ -38,7 +38,7 @@ export default function Question({ data, onSubmit }) {
         })}
       </ul>
       <div className="flex items-center justify-between text-sm">
-        <span className="text-test-lgt/50">
+        <span className="text-test-lgt/50 dark:text-dark-test-lgt/50">
           Question {data.questionNumber} of {data.totalQuestions}
         </span>
         <button

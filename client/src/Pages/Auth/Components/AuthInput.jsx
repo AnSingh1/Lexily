@@ -7,7 +7,7 @@ export default forwardRef(function AuthInput(props, ref) {
       type={props.type || "text"}
       placeholder={props.placeholder || ""}
       required={props.required !== undefined ? props.required : true}
-      className="rounded-md border-[1px] border-gray-border/[.16] px-6 py-3 font-roboto text-base text-test-lgt focus-visible:border-2 focus-visible:placeholder:text-test-lgt/50"
+      className="rounded-md border-[1px] border-gray-border/[.16] px-6 py-3 font-roboto text-base text-test-lgt focus-visible:border-2 focus-visible:placeholder:text-test-lgt/50 dark:border-dark-gray-border/[.16] dark:bg-white/10 dark:text-dark-test-lgt dark:focus-visible:placeholder:text-dark-test-lgt/50"
     />
   );
 });

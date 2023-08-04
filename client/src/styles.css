@@ -5,10 +5,14 @@
 @tailwind utilities;
 
 @layer base {
+  html.dark body {
+    background-color: theme("accentColor.gray.800");
+  }
+
   input[type="radio"] {
     -webkit-appearance: none;
     appearance: none;
-    background-color: #fff;
+    background-color: transparent;
     font: inherit;
     color: currentColor;
     width: 16px;

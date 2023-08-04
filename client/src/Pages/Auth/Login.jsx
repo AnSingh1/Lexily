@@ -20,8 +20,10 @@ export default function Login() {
   return (
     <div className="flex w-full flex-grow flex-col items-center justify-center">
       <div>
-        <form className="flex flex-col items-center gap-8 rounded-lg p-12 shadow-lg">
-          <h2 className="mb-4 font-poppins text-2xl text-test-dark">Log In</h2>
+        <form className="flex flex-col items-center gap-8 rounded-lg p-12 shadow-lg dark:bg-dark-card">
+          <h2 className="mb-4 font-poppins text-2xl text-test-dark dark:text-dark-test-dark">
+            Log In
+          </h2>
           <AuthInput type="email" placeholder="Email" ref={emailRef} />
           <AuthInput type="password" placeholder="Password" ref={passwordRef} />
           <button
@@ -34,7 +36,7 @@ export default function Login() {
           </button>
         </form>
       </div>
-      <span className="mt-4 font-roboto text-sm text-test-dark">
+      <span className="mt-4 font-roboto text-sm text-test-dark dark:text-dark-test-dark">
         Need an account? Sign up{" "}
         <Link className="underline" to="/signup">
           here
