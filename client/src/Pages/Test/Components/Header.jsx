@@ -17,10 +17,7 @@ export default function Header() {
       />
       <div className="flex items-center gap-4">
         <Settings className="cursor-pointer text-test-lgt/50 hover:text-test-lgt/75" />
-        <AccountCircle
-          className="cursor-pointer text-brand/75 hover:text-brand"
-          fontSize="large"
-        />
+        <AccountCircle className="cursor-pointer text-brand" fontSize="large" />
       </div>
     </header>
   );

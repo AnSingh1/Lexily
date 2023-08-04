@@ -6,10 +6,7 @@ import data from "../../../Utils/data"; // Temporary until received from backend
 
 export default function Page() {
   const section = data[1];
-  const story = section.section
-    .replace("\n", "")
-    .replaceAll("\n\n", "\n")
-    .slice(0, -1);
+  const story = section.section.replaceAll("\n\n", "\n").slice(1);
 
   return (
     <div className="relative mb-80 mt-12 flex w-[8.5in] flex-col gap-12 rounded border-gray-border/[.16] px-[9vw] py-24 sm:border-[1px]">
@@ -50,8 +47,14 @@ export default function Page() {
           questionNumber: 1,
           totalQuestions: section.options.length,
         }}
-        onSubmit={(_) => {
-          console.log("submit");
+        onSubmit={async (option) => {
+          // Secure validation in the future
+
+          if (option == parseInt(section.correct)) {
+            // Correct answer
+          } else {
+            // Incorrect answer
+          }
         }}
       />
     </div>

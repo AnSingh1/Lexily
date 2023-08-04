@@ -6,11 +6,12 @@ export default function Question({ data, onSubmit }) {
   const [selectedOption, setSelectedOption] = useState();
   const [loading, setLoading] = useState(false);
 
-  const clickHandler = (_) => {
+  const clickHandler = async (_) => {
     if (selectedOption == undefined || loading) return;
 
-    onSubmit(selectedOption);
     setLoading(true);
+    await onSubmit(selectedOption);
+    setLoading(false);
   };
 
   return (
