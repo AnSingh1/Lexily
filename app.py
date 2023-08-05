@@ -11,8 +11,8 @@ import os
 load_dotenv()
 openai.api_key = os.environ.get('API_KEY')
 
-cred = credentials.Certificate("key.json")
-firebase_admin.initialize_app(cred, {'databaseURL': 'https://lexily-9bc6b-default-rtdb.firebaseio.com/'})
+# cred = credentials.Certificate("key.json")
+# firebase_admin.initialize_app(cred, {'databaseURL': 'https://lexily-9bc6b-default-rtdb.firebaseio.com/'})
 
 app = Flask(__name__)
 
@@ -41,9 +41,9 @@ def generate():
 
     #HOW it should be sorted
     #difficulty should be out of 10
-    difficulty = data[0]
-    numTests = data[1]
-    theme = data[2]
+    difficulty = data["difficulty"]
+    numTests = data["numTests"]
+    theme = data["theme"]
 
 
     #start generating it
@@ -55,13 +55,14 @@ def generate():
     the appropriate reading passage. The entire format should be on the same topic and related to the theme. Each passage should be divided into 4 sections with each section being 2 paragraphs. This means that you will generate 8 paragraphs in total.
     Mark each section with the <section> tag and close it with the </section> tag. ONLY include the text of the section. No headers. Do not include any p tags. O
     nly include the section inside of the section tags. 
-    The section tag should only include the raw text. DO NOT INCLUDE ANY OTHER TAGS.
+    The section tag should ONLY include the raw text. DO NOT INCLUDE ANY OTHER TAGS. DO NOT NEST ANY DATA BESIDES THE SECTION TEXT WITHIN THE SECTION TAGS.
     
     You also need to provide one multiple choice question and answer from each section.
     Mark the question with <question> tag and close the question with the </question> tag. Only the question should be marked with the question tag, nothing else.
     You need to generate four options. Mark the options with the <option> tag and end with the </option> tag.
     The answer should be either 0, 1, 2, or 3. Mark the answer with the <answer> tag and close the answer with the <answer tag>
-    You also need to generate a sub title for each individual section. Mark the sub title with the <sub> tag and close it with the </sub> tag. 
+    
+    YOU ALSO NEED TO GENERATE A SUB TITLE FOR EACH SECTION. Mark the sub title with the <sub> tag and close it with the </sub> tag. 
     Be sure to close the section tag before using the sub tag.
     This tag should be placed right below the section and right above the question.
 
@@ -69,7 +70,7 @@ def generate():
     Mark the title with the <title> tag and close the title with the </title> tag. Only the title should be marked with this tag.
     """
 
-    initial = f"""The user has done {data[1]} tests and wants a passage with difficulty of {data[0]}/10. The theme preferred is {data[2]}"""
+    initial = f"""The user has done {numTests} tests and wants a passage with difficulty of {difficulty}/10. The theme preferred is {theme}"""
 
     messages = [{"role": "system", "content": instruction}, {"role": "user", "content": initial}]
 
@@ -114,8 +115,6 @@ def generate():
                 'correct': answers[count]
             }
             questions_data.append(data)
-
-        print(questions_data)
 
 
 
