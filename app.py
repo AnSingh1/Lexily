@@ -38,14 +38,7 @@ def serveReactApp(path):
 @app.route('/generate', methods = ["POST"])
 def generate():
     data = request.form
-
-    #HOW it should be sorted
-    #difficulty should be out of 10
-    difficulty = data[0]
-    numTests = data[1]
-    theme = data[2]
-
-
+    
     #start generating it
     sections = []
     questions = {}
@@ -69,7 +62,7 @@ def generate():
     Mark the title with the <title> tag and close the title with the </title> tag. Only the title should be marked with this tag.
     """
 
-    initial = f"""The user has done {data[1]} tests and wants a passage with difficulty of {data[0]}/10. The theme preferred is {data[2]}"""
+    initial = f"""The user has done {data['numTests']} tests and wants a passage with difficulty of {data['difficulty']}/10. The theme preferred is {data['theme']}"""
 
     messages = [{"role": "system", "content": instruction}, {"role": "user", "content": initial}]
 
