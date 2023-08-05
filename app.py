@@ -70,7 +70,7 @@ def generate():
     Mark the title with the <title> tag and close the title with the </title> tag. Only the title should be marked with this tag.
     """
 
-    initial = f"""The user has done {numTests} tests and wants a passage with difficulty of {difficulty}/10. The theme preferred is {theme}"""
+    initial = f"""The user has done {data['numTests']} tests and wants a passage with difficulty of {data['difficulty']}/10. The theme preferred is {data['theme']}"""
 
     messages = [{"role": "system", "content": instruction}, {"role": "user", "content": initial}]
 
