@@ -3,15 +3,15 @@ import React, { useState, useEffect } from "react";
 import Question from "./Question";
 import Loading from "../../../Components/Loading";
 
-// import data from "../../../Utils/data"; // Temporary until received from backend
-
 export default function Page() {
+  const [difficulty, setDifficulty] = useState(5); // Fetch from backend
+  const [numCorrect, setNumCorrect] = useState(0);
+  const [activeQuestion, setActiveQuestion] = useState(0);
   const [sectionData, setSectionData] = useState();
+  const [nextSectionData, setNextSectionData] = useState();
   const [loading, setLoading] = useState(true);
+  const [nextSectionLoading, setNextSectionLoading] = useState(true);
   const [error, setError] = useState();
-
-  // const section = data[1]; // Temp
-  // const story = section.section.replaceAll("\n\n", "\n").slice(1); // Temp
 
   const generateSection = async (difficulty, numTests, theme) => {
     const formData = new FormData();
@@ -25,17 +25,32 @@ export default function Page() {
     }).catch((e) => setError(e.message));
 
     const data = await response.json();
-    console.log(data);
 
-    setSectionData(data);
+    return data;
   };
 
   useEffect((_) => {
-    const difficulty = 5; // Temp until auth
-    const numTests = 3;
+    const numTests = 0;
     const theme = new URLSearchParams(location.search).get("type"); // VALIDATE IN BACKEND
 
-    generateSection(difficulty, numTests, theme);
+    generateSection(difficulty, numTests, theme).then((data) =>
+      setSectionData(data),
+    );
+
+    const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+
+    setNextSectionData(
+      [-3, -1, 0, 1, 3].reduce((a, c) => {
+        generateSection(clamp(0, difficulty + c, 10), numTests, theme)
+          .then((response) => response.json())
+          .then((data) => {
+            return {
+              ...a,
+              [c]: data,
+            };
+          });
+      }, {}),
+    );
   }, []);
 
   useEffect(
@@ -77,7 +92,12 @@ export default function Page() {
           <div className="flex flex-col gap-6 font-sans text-base text-test-lgt dark:text-dark-test-lgt">
             {sectionData.passage
               .replaceAll("\n\n", "\n")
-              .slice(1, -1)
+              .slice(
+                sectionData.passage.startsWith("\n") ? 1 : 0,
+                sectionData.passage.endsWith("\n")
+                  ? -1
+                  : sectionData.passage.length,
+              )
               .split("\n")
               .map((p, i) => {
                 return (
@@ -90,29 +110,43 @@ export default function Page() {
                 );
               })}
           </div>
-          <Question
-            data={{
-              question: sectionData.question,
-              options: sectionData.options,
-              questionNumber: 1,
-              totalQuestions: sectionData.options.length,
-            }}
-            onSubmit={async (option) => {
-              // Secure validation in the future
-              // numTests++;
+          {sectionData.questions.map((question, i) => {
+            return (
+              <Question
+                key={i}
+                data={{
+                  question: question.question,
+                  questionNumber: i + 1,
+                  totalQuestions: sectionData.questions.length,
+                  options: question.options,
+                  active: activeQuestion == i,
+                  type:
+                    i == sectionData.questions.length - 1 ? "submit" : "next",
+                }}
+                onSubmit={async (choice) => {
+                  // Secure validation in the future
 
-              if (option == parseInt(sectionData.answer)) {
-                // Correct answer
-                // difficulty++;
-              } else {
-                // Incorrect answer
-                // difficulty--;
-              }
+                  if (choice == parseInt(question.answer)) {
+                    // Correct answer
+                    setNumCorrect((p) => p + 1);
+                    // difficulty++;
+                  } else {
+                    // Incorrect answer
+                    // difficulty--;
+                  }
 
-              // setLoading(true)
-              // generate(new difficulty, new numTests, sectionData[0].title)
-            }}
-          />
+                  if (i !== sectionData.questions.length - 1)
+                    setActiveQuestion((p) => p + 1);
+                  else {
+                    // Submit answers
+                  }
+
+                  // setLoading(true)
+                  // generate(new difficulty, new numTests, sectionData[0].title)
+                }}
+              />
+            );
+          })}
         </>
       )}
       {error && <span className="font-roboto text-red-500">{error}</span>}

@@ -15,7 +15,11 @@ export default function Question({ data, onSubmit }) {
   };
 
   return (
-    <div className="absolute bottom-0 left-1/2 flex w-[85%] -translate-x-1/2 translate-y-[85%] flex-col gap-6 rounded-2xl border-[1px] border-gray-border/[.08] bg-white px-12 py-6 font-poppins shadow-lg dark:bg-dark-card">
+    <div
+      className={`${
+        (!data.active && "hidden") || "z-50"
+      } absolute bottom-0 left-1/2 flex w-[85%] -translate-x-1/2 translate-y-[85%] flex-col gap-6 rounded-2xl border-[1px] border-gray-border/[.08] bg-white px-12 py-6 font-poppins shadow-lg dark:bg-dark-card`}
+    >
       <h3 className="text-center text-lg text-test-dark dark:text-dark-test-dark sm:text-left">
         {data.question}
       </h3>
@@ -49,7 +53,10 @@ export default function Question({ data, onSubmit }) {
               : "cursor-default bg-brand/50"
           }`}
         >
-          Submit
+          {data.type
+            .substring(0, 1)
+            .toUpperCase()
+            .concat(data.type.substring(1))}
         </button>
       </div>
       {loading && <Loading />}

@@ -47,79 +47,79 @@ def generate():
     Provide a passage relating to the provided prompt within the JSON object. It should be created with the following format: "passage": <passage>, where <passage> is to be replaced with the generated passage. Be sure to include a comma after the passage to follow the json format.
     Provide a title for the passage. It should be created with the following format: "title": <title>, where <title> is to be replaced with the generated title.
     Provide a subtitle for the passage. It should be a more specific overview of the passage than the title. It should be created with the following format: "subtitle": <subtitle>, where <subtitle> is to be replaced with the generated subtitle.
-    Provide four multiple choice question for the passage. The question should reference the content of the passage. The question should be of the same difficulty as the passage. It should be created with the following format: "question": <question>, where <question> is to be replaced with the generated question.
-    Provide an array of four options for each question, 16 options total. Only one should be the correct answer. It should be created with the following format: "options": [<option0>, <option1>, <option2>, <option3>], where each item in the array is to be replaced with one of the generated options.
-    Provide the index of the correct answer in the questions array. It should be either 0, 1, 2, or 3. It should be created with the following format: "answer": <answer>, where <answer> is to be replaced with the index of the correct answer.
-    
+    Provide an array of four objects, each of which will contain a question relating to the passage. Within each object, provide a question of the same difficulty as the passage. It should be created with the following format: "question": <question>, where <question> is to be replaced with the generated question.
+    Within each question object, provide an array of 4 potential answers to the object's question. There should be only one correct answer. It should be created with the following format: "options": [<option0>, <option1>, <option2>, <option3>], where each item in the array is to be replaced with one of the generated options. Do not include any extra characters in each option.
+    Within each question object, provide the index of the correct answer to the question. It should be either 0, 1, 2, or 3. It should be created with the following format: "answer": <answer>, where <answer> is to be replaced with the index of the correct answer. 
+
     Here is an example of a proper response:
     
     {
         "title": "Some Title",
         "subtitle": "A subtitle",
         "passage": "Paragraph 1. \n\nParagraph 2",
-        "question0": "question",
-        "options0": [
-            "Option 0",
-            "Option 1",
-            "Option 2",
-            "Option 3",
-        ],
-        answer0: 1,
-
-        "question1": "question",
-        "options1": [
-            "Option 0",
-            "Option 1",
-            "Option 2",
-            "Option 3",
-        ],
-        answer1: 0,
-
-        "question2": "question",
-        "options2": [
-            "Option 0",
-            "Option 1",
-            "Option 2",
-            "Option 3",
-        ],
-        answer2: 1,
-
-        "question3": "question",
-        "options3": [
-            "Option 0",
-            "Option 1",
-            "Option 2",
-            "Option 3",
-        ],
-        answer3: 1,
+        "questions": [
+            {
+                "question": "Question?",
+                "options": [
+                    "Option 0",
+                    "Option 1",
+                    "Option 2",
+                    "Option 3",
+                ],
+                "answer": 2,
+            },
+            {
+                "question": "Question?",
+                "options": [
+                    "Option 0",
+                    "Option 1",
+                    "Option 2",
+                    "Option 3",
+                ],
+                "answer": 1,
+            },
+            {
+                "question": "Question?",
+                "options": [
+                    "Option 0",
+                    "Option 1",
+                    "Option 2",
+                    "Option 3",
+                ],
+                "answer": 0,
+            },
+            {
+                "question": "Question?",
+                "options": [
+                    "Option 0",
+                    "Option 1",
+                    "Option 2",
+                    "Option 3",
+                ],
+                "answer": 3,
+            },
+        ]
     }
     """
 
-    initial = f"""The user has done {data['numTests']} tests and wants a passage with difficulty of {data['difficulty']}/10. The theme preferred is {data['theme']} This means that you MUST {difficulty_desc[data['difficulty']]}"""
+    initial = f"""The user has done {data['numTests']} tests and wants a passage with difficulty of {data['difficulty']}/10. The theme preferred is {data['theme']} This means that you MUST {difficulty_desc[int(data['difficulty'])]}"""
 
     messages = [{"role": "system", "content": instruction}, {"role": "user", "content": initial}]
 
-    try:
-        response = openai.ChatCompletion.create(
-            model = "gpt-3.5-turbo",
-            messages = messages
-        )
-        result = response["choices"][0]["message"]["content"]
-        print("Result")
-        print(result)
+    questions_data = None
 
-        questions_data = json.loads(result, strict=False)
-        questions_data["difficulty"] = int(data["difficulty"])
+    while not questions_data:
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=messages
+            )
+            result = response["choices"][0]["message"]["content"]
 
-
-
-
-
-
-    except Exception as e:
-        print(e)
-        return jsonify({"message": e})
-
+            questions_data = json.loads(result, strict=False)
+            questions_data["difficulty"] = int(data["difficulty"])
+        except Exception as e:
+            print(e)
 
     print(questions_data)
     return jsonify(questions_data)
