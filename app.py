@@ -52,22 +52,30 @@ def generate():
     options = {}
 
     instruction = """You are a reading guide that generates reading sections and answers. Based on the user's difficulty and number of tests, you are to generate
-    the appropriate reading passage. The entire format should be on the same topic and related to the theme. Each passage should be divided into 4 sections with each section being 2 paragraphs. This means that you will generate 8 paragraphs in total.
-    Mark each section with the <section> tag and close it with the </section> tag. ONLY include the text of the section. No headers. Do not include any p tags. O
-    nly include the section inside of the section tags. 
-    The section tag should ONLY include the raw text. DO NOT INCLUDE ANY OTHER TAGS. DO NOT NEST ANY DATA BESIDES THE SECTION TEXT WITHIN THE SECTION TAGS.
+    the appropriate reading passage. All content should be on the same topic and related to the theme. Everything should be generated within the same JSON object using key-value pairs.
     
-    You also need to provide one multiple choice question and answer from each section.
-    Mark the question with <question> tag and close the question with the </question> tag. Only the question should be marked with the question tag, nothing else.
-    You need to generate four options. Mark the options with the <option> tag and end with the </option> tag.
-    The answer should be either 0, 1, 2, or 3. Mark the answer with the <answer> tag and close the answer with the <answer tag>
+    Provide a passage relating to the provided prompt within the JSON object. It should be created with the following format: "passage": <passage>, where <passage> is to be replaced with the generated passage.
+    Provide a title for the passage. It should be created with the following format: "title": <title>, where <title> is to be replaced with the generated title.
+    Provide a subtitle for the passage. It should be a more specific overview of the passage than the title. It should be created with the following format: "subtitle": <subtitle>, where <subtitle> is to be replaced with the generated subtitle.
+    Provide one multiple choice question for the passage. The question should reference the content of the passage. The question should be of the same difficulty as the passage. It should be created with the following format: "question": <question>, where <question> is to be replaced with the generated question.
+    Provide an array of four options to the question. Only one should be the correct answer. It should be created with the following format: "options": [<option1>, <option2>, <option3>, <option4>], where each item in the array is to be replaced with one of the generated options.
+    Provide the index of the correct answer in the questions array. It should be either 0, 1, 2, or 3. It should be created with the following format: "answer": <answer>, where <answer> is to be replaced with the index of the correct answer.
     
-    YOU ALSO NEED TO GENERATE A SUB TITLE FOR EACH SECTION. Mark the sub title with the <sub> tag and close it with the </sub> tag. 
-    Be sure to close the section tag before using the sub tag.
-    This tag should be placed right below the section and right above the question.
-
-    You need to generate a title for the entire passage.
-    Mark the title with the <title> tag and close the title with the </title> tag. Only the title should be marked with this tag.
+    Here is an example of a proper response:
+    
+    {
+        "title": "The Renaissance Period",
+        "subtitle": "The traits and significance of the Renaissance",
+        "passage": "One of the key characteristics of the Renaissance was the patronage of wealthy and powerful individuals. This support allowed artists, scholars, and scientists to pursue their work and contribute to the cultural and intellectual flourishing of the time. The Medici family, for example, played a vital role in supporting artists such as Donatello and Botticelli in Florence.\n\nThe spread of Renaissance ideas and culture was facilitated by the invention of the printing press by Johannes Gutenberg in the 15th century. This technological advancement made books more readily available, leading to an increase in literacy and the spread of knowledge across Europe. It also enabled the dissemination of scientific and philosophical ideas, further fueling the intellectual development of the period.",
+        "question": "How did innovation influence the spread of the Renaissance?",
+        "options": [
+            "It improved the availability of Renaissance ideas",
+            "Inventions improved the quality of life for citizens",
+            "Artists were able to work more efficiently",
+            "The Renaissance was unaffected by innovation"
+        ],
+        answer: 1
+    }
     """
 
     initial = f"""The user has done {data['numTests']} tests and wants a passage with difficulty of {data['difficulty']}/10. The theme preferred is {data['theme']}"""
@@ -82,39 +90,8 @@ def generate():
         result = response["choices"][0]["message"]["content"]
         print(result)
 
-        #extracting the content
-        section_pattern = re.compile(r"<section>(.*?)<\/section>", re.DOTALL)
-        question_pattern = re.compile(r"<question>(.*?)<\/question>", re.DOTALL)
-        option_pattern = re.compile(r"<option>(.*?)<\/option>", re.DOTALL)
-        answer_pattern = re.compile(r"<answer>(.*?)<\/answer>", re.DOTALL)
-        title_pattern = re.compile(r"<title>(.*?)<\/title>", re.DOTALL)
-        sub_pattern = re.compile(r"<sub>(.*?)<\/sub>", re.DOTALL)
-
-        sections = section_pattern.findall(result)
-        questions = question_pattern.findall(result)
-        options = option_pattern.findall(result)
-        answers = answer_pattern.findall(result)
-        title = title_pattern.findall(result)[0]
-        subTitles = sub_pattern.findall(result)
-
-        questions_data = [
-            {"title": title}
-        ]
-
-        for count, section in enumerate(sections):
-            data = {
-                "subTitle": subTitles[count],
-                'section': section,
-                'question': questions[count],
-                'options': [
-                    options[count*4],
-                    options[count*4 + 1],
-                    options[count*4 + 2],
-                    options[count*4 + 3],
-                ],
-                'correct': answers[count]
-            }
-            questions_data.append(data)
+        questions_data = json.loads(result, strict=False)
+        questions_data["difficulty"] = int(data["difficulty"])
 
 
 

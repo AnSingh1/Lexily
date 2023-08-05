@@ -1,41 +1,41 @@
 import React, { useState, useEffect } from "react";
 
 import Question from "./Question";
+import Loading from "../../../Components/Loading";
 
 // import data from "../../../Utils/data"; // Temporary until received from backend
 
 export default function Page() {
   const [sectionData, setSectionData] = useState();
   const [loading, setLoading] = useState(true);
-  const [sectionNumber, setSectionNumber] = useState(1);
   const [error, setError] = useState();
 
   // const section = data[1]; // Temp
   // const story = section.section.replaceAll("\n\n", "\n").slice(1); // Temp
+
+  const generateSection = async (difficulty, numTests, theme) => {
+    const formData = new FormData();
+    formData.append("difficulty", difficulty);
+    formData.append("numTests", numTests);
+    formData.append("theme", theme);
+
+    const response = await fetch("/generate", {
+      method: "POST",
+      body: formData,
+    }).catch((e) => setError(e.message));
+
+    const data = await response.json();
+    console.log(data);
+
+    setSectionData(data);
+  };
 
   useEffect((_) => {
     const difficulty = 5; // Temp until auth
     const numTests = 3;
     const theme = new URLSearchParams(location.search).get("type"); // VALIDATE IN BACKEND
 
-    const generateSection = async (_) => {
-      const formData = new FormData();
-      formData.append("difficulty", difficulty);
-      formData.append("numTests", numTests);
-      formData.append("theme", theme);
-
-      const response = await fetch("/generate", {
-        method: "POST",
-        body: formData,
-      }).catch((e) => setError(e.message));
-
-      const data = await response.json();
-      console.log(data);
-
-      setSectionData(data);
-    };
-
-    generateSection();
+    generateSection(difficulty, numTests, theme);
   }, []);
 
   useEffect(
@@ -49,14 +49,15 @@ export default function Page() {
 
   return (
     <div className="relative mb-80 mt-12 flex w-[8.5in] flex-col gap-12 rounded border-gray-border/[.16] bg-white px-[9vw] py-24 dark:border-dark-gray-border/[.16] dark:bg-dark-card/25 sm:border-[1px]">
+      {loading && <Loading />}
       {!loading && (
         <>
           <div className="text-center font-poppins">
             <h1 className="text-3xl text-test-dark dark:text-dark-test-dark">
-              {sectionData[0].title}
+              {sectionData.title}
             </h1>
             <h2 className="text-lg uppercase text-test-lgt dark:text-dark-test-lgt">
-              {sectionData[sectionNumber].subTitle}
+              {sectionData.subtitle}
             </h2>
           </div>
           <svg
@@ -74,9 +75,9 @@ export default function Page() {
             />
           </svg>
           <div className="flex flex-col gap-6 font-sans text-base text-test-lgt dark:text-dark-test-lgt">
-            {sectionData[sectionNumber].section
+            {sectionData.passage
               .replaceAll("\n\n", "\n")
-              .slice(1)
+              .slice(1, -1)
               .split("\n")
               .map((p, i) => {
                 return (
@@ -91,19 +92,25 @@ export default function Page() {
           </div>
           <Question
             data={{
-              question: sectionData[sectionNumber].question,
-              options: sectionData[sectionNumber].options,
+              question: sectionData.question,
+              options: sectionData.options,
               questionNumber: 1,
-              totalQuestions: sectionData[sectionNumber].options.length,
+              totalQuestions: sectionData.options.length,
             }}
             onSubmit={async (option) => {
               // Secure validation in the future
+              // numTests++;
 
-              if (option == parseInt(sectionData[sectionNumber].correct)) {
+              if (option == parseInt(sectionData.answer)) {
                 // Correct answer
+                // difficulty++;
               } else {
                 // Incorrect answer
+                // difficulty--;
               }
+
+              // setLoading(true)
+              // generate(new difficulty, new numTests, sectionData[0].title)
             }}
           />
         </>
