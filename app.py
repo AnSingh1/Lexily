@@ -54,27 +54,54 @@ def generate():
     instruction = """You are a reading guide that generates reading sections and answers. Based on the user's difficulty and number of tests, you are to generate
     the appropriate reading passage. All content should be on the same topic and related to the theme. Everything should be generated within the same JSON object using key-value pairs.
     
-    Provide a passage relating to the provided prompt within the JSON object. It should be created with the following format: "passage": <passage>, where <passage> is to be replaced with the generated passage.
+    Provide a passage relating to the provided prompt within the JSON object. It should be created with the following format: "passage": <passage>, where <passage> is to be replaced with the generated passage. Be sure to include a comma after the passage to follow the json format.
     Provide a title for the passage. It should be created with the following format: "title": <title>, where <title> is to be replaced with the generated title.
     Provide a subtitle for the passage. It should be a more specific overview of the passage than the title. It should be created with the following format: "subtitle": <subtitle>, where <subtitle> is to be replaced with the generated subtitle.
-    Provide one multiple choice question for the passage. The question should reference the content of the passage. The question should be of the same difficulty as the passage. It should be created with the following format: "question": <question>, where <question> is to be replaced with the generated question.
-    Provide an array of four options to the question. Only one should be the correct answer. It should be created with the following format: "options": [<option1>, <option2>, <option3>, <option4>], where each item in the array is to be replaced with one of the generated options.
+    Provide four multiple choice question for the passage. The question should reference the content of the passage. The question should be of the same difficulty as the passage. It should be created with the following format: "question": <question>, where <question> is to be replaced with the generated question.
+    Provide an array of four options for each question, 16 options total. Only one should be the correct answer. It should be created with the following format: "options": [<option0>, <option1>, <option2>, <option3>], where each item in the array is to be replaced with one of the generated options.
     Provide the index of the correct answer in the questions array. It should be either 0, 1, 2, or 3. It should be created with the following format: "answer": <answer>, where <answer> is to be replaced with the index of the correct answer.
     
     Here is an example of a proper response:
     
     {
-        "title": "The Renaissance Period",
-        "subtitle": "The traits and significance of the Renaissance",
-        "passage": "One of the key characteristics of the Renaissance was the patronage of wealthy and powerful individuals. This support allowed artists, scholars, and scientists to pursue their work and contribute to the cultural and intellectual flourishing of the time. The Medici family, for example, played a vital role in supporting artists such as Donatello and Botticelli in Florence.\n\nThe spread of Renaissance ideas and culture was facilitated by the invention of the printing press by Johannes Gutenberg in the 15th century. This technological advancement made books more readily available, leading to an increase in literacy and the spread of knowledge across Europe. It also enabled the dissemination of scientific and philosophical ideas, further fueling the intellectual development of the period.",
-        "question": "How did innovation influence the spread of the Renaissance?",
-        "options": [
-            "It improved the availability of Renaissance ideas",
-            "Inventions improved the quality of life for citizens",
-            "Artists were able to work more efficiently",
-            "The Renaissance was unaffected by innovation"
+        "title": "Some Title",
+        "subtitle": "A subtitle",
+        "passage": "Paragraph 1. \n\nParagraph 2",
+        "question0": "question",
+        "options0": [
+            "Option 0",
+            "Option 1",
+            "Option 2",
+            "Option 3",
         ],
-        answer: 1
+        answer0: 1,
+
+        "question1": "question",
+        "options1": [
+            "Option 0",
+            "Option 1",
+            "Option 2",
+            "Option 3",
+        ],
+        answer1: 0,
+
+        "question2": "question",
+        "options2": [
+            "Option 0",
+            "Option 1",
+            "Option 2",
+            "Option 3",
+        ],
+        answer2: 1,
+
+        "question3": "question",
+        "options3": [
+            "Option 0",
+            "Option 1",
+            "Option 2",
+            "Option 3",
+        ],
+        answer3: 1,
     }
     """
 
@@ -88,6 +115,7 @@ def generate():
             messages = messages
         )
         result = response["choices"][0]["message"]["content"]
+        print("Result")
         print(result)
 
         questions_data = json.loads(result, strict=False)
@@ -103,7 +131,7 @@ def generate():
         return jsonify({"message": e})
 
 
-
+    print(questions_data)
     return jsonify(questions_data)
 
 
