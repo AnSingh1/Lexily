@@ -1,1 +1,1 @@
-# AI-Flash-Cards
+# Lexily
