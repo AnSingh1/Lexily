@@ -11,8 +11,10 @@ import os
 load_dotenv()
 openai.api_key = os.environ.get('API_KEY')
 
-# cred = credentials.Certificate("key.json")
-# firebase_admin.initialize_app(cred, {'databaseURL': 'https://lexily-9bc6b-default-rtdb.firebaseio.com/'})
+cred = credentials.Certificate("key.json")
+firebase_admin.initialize_app(cred, {'databaseURL': 'https://lexily-9bc6b-default-rtdb.firebaseio.com/'})
+
+difficulty_desc = {10: "give extremely tough questions. Use complex words for the question and passage. Make the passage about something extremely niche.", 9: "make the passage about something niche, use complex words for the passage but semi-complex words for the questions. The questions must require critical thinking. ", 8: "Make the passage about something very niche, use complex words for the passage but medium complexity words for the questions. Questions should require critical thinking.", 7: "make the passage about something very niche and use complex words for the passage. Questions should require critical thinking.", 6:"make the passage about something niche and require the passage to be fully understood to be able to understand the questions. Use semi-complex words for the passage.", 5:"make the passage niche and require a complex understanding of the passage to answer the questions.", 4:"make the passage unique and require understanding in order to answer the questions.", 3: "make the passage semi-unique, the user should not be able to guess the questions right.", 2: "use complex words for the questions.", 1: "use simple terms and a generic passage.", 0: "use simple terms for everything and give a very generic passage."}
 
 app = Flask(__name__)
 
@@ -38,18 +40,6 @@ def serveReactApp(path):
 @app.route('/generate', methods = ["POST"])
 def generate():
     data = request.form
-
-    #HOW it should be sorted
-    #difficulty should be out of 10
-    difficulty = data["difficulty"]
-    numTests = data["numTests"]
-    theme = data["theme"]
-
-
-    #start generating it
-    sections = []
-    questions = {}
-    options = {}
 
     instruction = """You are a reading guide that generates reading sections and answers. Based on the user's difficulty and number of tests, you are to generate
     the appropriate reading passage. All content should be on the same topic and related to the theme. Everything should be generated within the same JSON object using key-value pairs.
@@ -105,7 +95,7 @@ def generate():
     }
     """
 
-    initial = f"""The user has done {data['numTests']} tests and wants a passage with difficulty of {data['difficulty']}/10. The theme preferred is {data['theme']}"""
+    initial = f"""The user has done {data['numTests']} tests and wants a passage with difficulty of {data['difficulty']}/10. The theme preferred is {data['theme']} This means that you MUST {difficulty_desc[data['difficulty']]}"""
 
     messages = [{"role": "system", "content": instruction}, {"role": "user", "content": initial}]
 
@@ -139,35 +129,23 @@ def generate():
 
 @app.route('/signup', methods = ["POST"])
 def signup():
-    data = json.loads(request.form['data'])
+    data = request.form
 
-    #HOW it should be sorted
-    name = data[0]
-    email = data[1]
-    password = data[2]
-    difficulty = data[3]
-    numTests = data[4]
-
-    if getUserData(data[1]):
+    if getUserData(data["email"]):
         return jsonify({"message": "Account already exists"})
     else:
-        addUser(data[0], data[1], data[2], data[3], data[4])
+        addUser(data["name"], data["email"], data["password"], data["difficulty"], data["numTests"])
 
-        return jsonify({"message": "success", "email": data[1]})
+        return jsonify({"message": "success", "email": data["email"]})
 
 @app.route('/login', methods = ["POST"])
 def login():
-    data = json.loads(request.form['data'])
+    data = request.form
 
-    #HOW it should be sorted
-
-    email = data[0]
-    password = data[1]
-
-    user_data = getUserData(data[0])
+    user_data = getUserData(data["email"])
     if user_data:
-        if user_data['password'] == data[1]:
-            return jsonify({"message": "success", "email": data[0], "difficulty": user_data['difficulty'], "numTests": user_data['numTests']})
+        if user_data['password'] == data["password"]:
+            return jsonify({"message": "success", "email": data["email"], "difficulty": user_data['difficulty'], "numTests": user_data['numTests']})
         else:
             return jsonify({"message": "incorrect password"})
     else:
@@ -175,16 +153,14 @@ def login():
 
 @app.route('/update')
 def updateUser():
-    email = request.form.get('email')
-    difficulty = request.form.get('difficulty')
-    numTests = request.form.get('numTests')
+    data = request.form
 
     ref = db.reference('users')
-    users_ref = ref.child(email.replace('.', ','))
+    users_ref = ref.child(data["email"].replace('.', ','))
 
     users_ref.update({
-        "difficulty": difficulty,
-        "numTests": numTests,
+        "difficulty": data["difficulty"],
+        "numTests": data["numTests"],
     })
 
 def addUser(name, email, password, difficulty, numTests):
