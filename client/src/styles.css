@@ -9,6 +9,10 @@
     background-color: theme("accentColor.gray.800");
   }
 
+  body {
+    overflow-y: hidden;
+  }
+
   input[type="radio"] {
     -webkit-appearance: none;
     appearance: none;

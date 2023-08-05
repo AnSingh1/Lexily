@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import Question from "./Question";
 
 import data from "../../../Utils/data"; // Temporary until received from backend
 
 export default function Page() {
-  const section = data[1];
-  const story = section.section.replaceAll("\n\n", "\n").slice(1);
+  const [sectionData, setSectionData] = useState();
+
+  const section = data[1]; // Temp
+  const story = section.section.replaceAll("\n\n", "\n").slice(1); // Temp
+
+  useEffect((_) => {
+    // fetch backend => user difficulty, numTests, theme
+    // setSectionData(response)
+  }, []);
 
   return (
     <div className="relative mb-80 mt-12 flex w-[8.5in] flex-col gap-12 rounded border-gray-border/[.16] bg-white px-[9vw] py-24 dark:border-dark-gray-border/[.16] dark:bg-dark-card/25 sm:border-[1px]">

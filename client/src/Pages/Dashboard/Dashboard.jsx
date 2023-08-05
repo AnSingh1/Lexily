@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { ChevronRight } from "@mui/icons-material";
 
-const testTypes = ["History", "Science", "Fiction", "Fantasy", "Arts"];
+import tests from "../../Utils/tests";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -28,14 +28,16 @@ export default function Dashboard() {
             Take a Test
           </h2>
           <ul className="mt-6 grid flex-grow grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-3">
-            {testTypes.map((type, i) => {
+            {tests.map((test, i) => {
               return (
                 <li
-                  onClick={(_) => navigate(`/test?type=${type.toLowerCase()}`)}
+                  onClick={(_) =>
+                    navigate(`/test?type=${test.type.toLowerCase()}`)
+                  }
                   className="border-gray-border-[.08] flex cursor-pointer justify-between rounded-lg border-[1px] p-4 text-test-lgt hover:border-brand hover:text-brand dark:border-dark-gray-border dark:text-dark-test-lgt dark:hover:border-brand dark:hover:text-brand"
                   key={i}
                 >
-                  <h3 className="font-open text-base">{type}</h3>
+                  <h3 className="font-open text-base">{test.type}</h3>
                   <ChevronRight />
                 </li>
               );
