@@ -1,11 +1,13 @@
+import "react-tooltip/dist/react-tooltip.css";
+
 import React from "react";
 
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 import Header from "./Pages/Test/Components/Header";
 import Dashboard from "./Pages/Dashboard/Dashboard";
-import Signup from "./Pages/Auth/Signup";
-import Login from "./Pages/Auth/Login";
+// import Signup from "./Pages/Auth/Signup";
+// import Login from "./Pages/Auth/Login";
 import Test from "./Pages/Test/Test";
 
 export default function App() {
@@ -17,12 +19,12 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/test" element={<Test />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+            {/* <Route path="/login" element={<Login />} /> */}
+            {/* <Route path="/signup" element={<Signup />} /> */}
             <Route
               path="*"
               element={
-                <div className="flex w-full flex-grow flex-col items-center justify-center gap-6">
+                <div className="flex h-full w-full flex-col items-center justify-center gap-6">
                   <h1 className="font-mono text-9xl text-test-dark dark:text-dark-test-dark">
                     404
                   </h1>

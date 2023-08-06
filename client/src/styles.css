@@ -91,3 +91,11 @@
     background-color: rgba(0, 0, 0, 0.2);
   }
 }
+
+@layer components {
+  * .react-tooltip {
+    font-size: 12px !important;
+    font-family: theme("fontFamily.roboto");
+    padding: 4px 12px !important;
+  }
+}

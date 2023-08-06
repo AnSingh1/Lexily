@@ -9,16 +9,20 @@ import {
 } from "@mui/icons-material";
 
 export default function Header() {
-  const [darkModeEnabled, setDarkModeEnabled] = useState(
-    document.documentElement.classList.contains("dark"),
-  );
+  const [darkModeEnabled, setDarkModeEnabled] = useState();
 
   const navigate = useNavigate();
 
   useEffect(
     (_) => {
-      if (darkModeEnabled) document.documentElement.classList.add("dark");
+      if (darkModeEnabled === undefined)
+        setDarkModeEnabled(window.localStorage.getItem("dark") || false);
+
+      if (darkModeEnabled === "true")
+        document.documentElement.classList.add("dark");
       else document.documentElement.classList.remove("dark");
+
+      window.localStorage.setItem("dark", darkModeEnabled);
     },
     [darkModeEnabled],
   );
@@ -32,18 +36,19 @@ export default function Header() {
         alt="Logo"
       />
       <div className="flex items-center gap-4">
-        {darkModeEnabled ? (
+        {darkModeEnabled && (
           <LightMode
             className="cursor-pointer text-test-lgt/50 hover:text-test-lgt/75 dark:text-dark-test-lgt/50 dark:hover:text-dark-test-lgt/75"
-            onClick={(_) => setDarkModeEnabled(false)}
-          />
-        ) : (
-          <DarkMode
-            className="cursor-pointer text-test-lgt/50 hover:text-test-lgt/75 dark:text-dark-test-lgt/50 dark:hover:text-dark-test-lgt/75"
-            onCLick={(_) => setDarkModeEnabled(true)}
+            onClick={(_) => setDarkModeEnabled("false")}
           />
         )}
-        <AccountCircle className="cursor-pointer text-brand" fontSize="large" />
+        {!darkModeEnabled && (
+          <DarkMode
+            className="cursor-pointer text-test-lgt/50 hover:text-test-lgt/75 dark:text-dark-test-lgt/50 dark:hover:text-dark-test-lgt/75"
+            onCLick={(_) => setDarkModeEnabled("true")}
+          />
+        )}
+        {/* <AccountCircle className="cursor-pointer text-brand" fontSize="large" /> */}
       </div>
     </header>
   );

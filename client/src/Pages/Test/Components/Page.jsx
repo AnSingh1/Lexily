@@ -3,22 +3,16 @@ import React, { useRef, useState, useEffect } from "react";
 import Question from "./Question";
 import Loading from "../../../Components/Loading";
 
-// import EventEmitter from "eventemitter3";
-
-// const emitter = new EventEmitter();
-
 export default function Page() {
   const containerRef = useRef();
 
   const [theme, setTheme] = useState();
-  const [numTests, setNumTests] = useState(0);
-  const [difficulty, setDifficulty] = useState(5); // Fetch from backend
+  const [numTests, setNumTests] = useState();
+  const [difficulty, setDifficulty] = useState(); // Fetch from backend
   const [numCorrect, setNumCorrect] = useState(0);
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [sectionData, setSectionData] = useState();
-  // const [nextSectionData, setNextSectionData] = useState();
   const [loading, setLoading] = useState(true);
-  // const [nextSectionLoading, setNextSectionLoading] = useState(true);
   const [error, setError] = useState();
 
   const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
@@ -36,44 +30,22 @@ export default function Page() {
 
     const data = await response.json();
 
-    console.log(data);
-
     return data;
   };
 
-  // const generateNextSections = async (numTests, theme) => {
-  //   const startTime = Date.now();
-  //   setNextSectionLoading(true);
-
-  //   const nextDifficulties = [
-  //     ...new Set(
-  //       [-3, -1, 0, 1, 3].reduce(
-  //         (a, c) => [...a, clamp(0, c + difficulty, 10)],
-  //         [],
-  //       ),
-  //     ),
-  //   ].join(", ");
-
-  //   generateSection(nextDifficulties, numTests, theme).then((data) => {
-  //     console.log(
-  //       `Finished generating next diffs in ${
-  //         (Date.now() - startTime) / 1000
-  //       }s.`,
-  //     );
-
-  //     setNextSectionData(data);
-  //   });
-  // };
-
   useEffect((_) => {
+    const difficulty = parseInt(window.localStorage.getItem("difficulty")) || 5;
+    const numTests = parseInt(window.localStorage.getItem("numTests")) || 0;
+
+    setDifficulty(difficulty);
+    setNumTests(numTests);
+
     const theme = new URLSearchParams(location.search).get("type"); // VALIDATE IN BACKEND
     setTheme(theme);
 
-    generateSection(difficulty, numTests, theme).then((data) => {
-      setSectionData(data /*.passages[0]*/);
-
-      // generateNextSections(numTests, theme);
-    });
+    generateSection(difficulty, numTests, theme).then((data) =>
+      setSectionData(data),
+    );
   }, []);
 
   useEffect(
@@ -84,18 +56,6 @@ export default function Page() {
     },
     [sectionData],
   );
-
-  // useEffect(
-  //   (_) => {
-  //     if (!nextSectionData) return;
-
-  //     console.log(nextSectionData);
-
-  //     setNextSectionLoading(false);
-  //     emitter.emit("loaded");
-  //   },
-  //   [nextSectionData],
-  // );
 
   return (
     <div
@@ -175,7 +135,7 @@ export default function Page() {
                     const newNumTests = numTests + 1;
                     setNumTests(newNumTests);
 
-                    const difficultyChange = ["-3", "-1", "0", "1", "3"][
+                    const difficultyChange = ["-2", "-2", "-1", "1", "2"][
                       numCorrect
                     ];
 
@@ -188,6 +148,12 @@ export default function Page() {
                       setNumCorrect(0);
                       setActiveQuestion(0);
                       setDifficulty(data.difficulty);
+
+                      window.localStorage.setItem(
+                        "difficulty",
+                        data.difficulty,
+                      );
+                      window.localStorage.setItem("numTests", newNumTests);
 
                       setLoading(false);
 
