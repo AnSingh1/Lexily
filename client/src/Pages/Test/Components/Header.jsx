@@ -7,6 +7,7 @@ import {
   Brightness4 as DarkMode,
   Brightness5 as LightMode,
 } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 
 export default function Header() {
   const [darkModeEnabled, setDarkModeEnabled] = useState();
@@ -36,18 +37,18 @@ export default function Header() {
         alt="Logo"
       />
       <div className="flex items-center gap-4">
-        {darkModeEnabled && (
-          <LightMode
-            className="cursor-pointer text-test-lgt/50 hover:text-test-lgt/75 dark:text-dark-test-lgt/50 dark:hover:text-dark-test-lgt/75"
-            onClick={(_) => setDarkModeEnabled("false")}
-          />
-        )}
-        {!darkModeEnabled && (
-          <DarkMode
-            className="cursor-pointer text-test-lgt/50 hover:text-test-lgt/75 dark:text-dark-test-lgt/50 dark:hover:text-dark-test-lgt/75"
-            onCLick={(_) => setDarkModeEnabled("true")}
-          />
-        )}
+        <IconButton
+          onClick={(_) =>
+            setDarkModeEnabled((p) => (p === "true" ? "false" : "true"))
+          }
+        >
+          {darkModeEnabled === "true" && (
+            <LightMode className="cursor-pointer text-test-lgt/50 dark:text-dark-test-lgt/50" />
+          )}
+          {darkModeEnabled === "false" && (
+            <DarkMode className="cursor-pointer text-test-lgt/50 dark:text-dark-test-lgt/50" />
+          )}
+        </IconButton>
         {/* <AccountCircle className="cursor-pointer text-brand" fontSize="large" /> */}
       </div>
     </header>

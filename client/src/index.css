@@ -1163,6 +1163,10 @@ input[type="radio"]:checked::before {
   background-color: rgb(255 255 255 / 0.1);
 }
 
+:is(.dark .dark\:bg-dark-test-lgt\/20){
+  background-color: rgb(118 131 144 / 0.2);
+}
+
 :is(.dark .dark\:text-black){
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
