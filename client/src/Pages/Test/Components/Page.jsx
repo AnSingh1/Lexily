@@ -185,6 +185,7 @@ export default function Page() {
                       theme,
                     ).then((data) => {
                       setSectionData(data);
+                      setNumCorrect(0);
                       setActiveQuestion(0);
                       setDifficulty(data.difficulty);
 
