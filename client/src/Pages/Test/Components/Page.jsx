@@ -3,20 +3,22 @@ import React, { useRef, useState, useEffect } from "react";
 import Question from "./Question";
 import Loading from "../../../Components/Loading";
 
-import EventEmitter from "eventemitter3";
+// import EventEmitter from "eventemitter3";
 
-const emitter = new EventEmitter();
+// const emitter = new EventEmitter();
 
 export default function Page() {
   const containerRef = useRef();
 
+  const [theme, setTheme] = useState();
+  const [numTests, setNumTests] = useState(0);
   const [difficulty, setDifficulty] = useState(5); // Fetch from backend
   const [numCorrect, setNumCorrect] = useState(0);
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [sectionData, setSectionData] = useState();
-  const [nextSectionData, setNextSectionData] = useState();
+  // const [nextSectionData, setNextSectionData] = useState();
   const [loading, setLoading] = useState(true);
-  const [nextSectionLoading, setNextSectionLoading] = useState(true);
+  // const [nextSectionLoading, setNextSectionLoading] = useState(true);
   const [error, setError] = useState();
 
   const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
@@ -34,51 +36,43 @@ export default function Page() {
 
     const data = await response.json();
 
+    console.log(data);
+
     return data;
   };
 
-  const generateNextSections = async (numTests, theme) => {
-    const startTime = Date.now();
-    setNextSectionLoading(true);
+  // const generateNextSections = async (numTests, theme) => {
+  //   const startTime = Date.now();
+  //   setNextSectionLoading(true);
 
-    // const d = [-3, -1, 0, 1, 3].reduce(async (a, c) => {
-    //   const data = await generateSection(
-    //     clamp(0, difficulty + c, 10),
-    //     numTests,
-    //     theme,
-    //   );
+  //   const nextDifficulties = [
+  //     ...new Set(
+  //       [-3, -1, 0, 1, 3].reduce(
+  //         (a, c) => [...a, clamp(0, c + difficulty, 10)],
+  //         [],
+  //       ),
+  //     ),
+  //   ].join(", ");
 
-    //   return {
-    //     ...a,
-    //     [c]: await data,
-    //   };
-    // }, {});
+  //   generateSection(nextDifficulties, numTests, theme).then((data) => {
+  //     console.log(
+  //       `Finished generating next diffs in ${
+  //         (Date.now() - startTime) / 1000
+  //       }s.`,
+  //     );
 
-    const diffs = [-3, -1, 0, 1, 3];
-    const data = {};
-
-    for (let i = 0; i < diffs.length; i++)
-      data[diffs[i]] = await generateSection(
-        clamp(0, difficulty + diffs[i], 10),
-        numTests,
-        theme,
-      );
-
-    console.log(
-      `Finished generating next diffs in ${(Date.now() - startTime) / 1000}s.`,
-    );
-
-    setNextSectionData(data);
-  };
+  //     setNextSectionData(data);
+  //   });
+  // };
 
   useEffect((_) => {
-    const numTests = 0;
     const theme = new URLSearchParams(location.search).get("type"); // VALIDATE IN BACKEND
+    setTheme(theme);
 
     generateSection(difficulty, numTests, theme).then((data) => {
-      setSectionData(data);
+      setSectionData(data /*.passages[0]*/);
 
-      generateNextSections(numTests, /*data.title*/ theme);
+      // generateNextSections(numTests, theme);
     });
   }, []);
 
@@ -91,24 +85,17 @@ export default function Page() {
     [sectionData],
   );
 
-  useEffect(
-    (_) => {
-      if (!nextSectionData) return;
+  // useEffect(
+  //   (_) => {
+  //     if (!nextSectionData) return;
 
-      console.log(nextSectionData);
+  //     console.log(nextSectionData);
 
-      setNextSectionLoading(false);
-      emitter.emit("loaded");
-    },
-    [nextSectionData],
-  );
-
-  useEffect(
-    (_) => {
-      console.log(nextSectionData);
-    },
-    [nextSectionLoading],
-  );
+  //     setNextSectionLoading(false);
+  //     emitter.emit("loaded");
+  //   },
+  //   [nextSectionData],
+  // );
 
   return (
     <div
@@ -183,32 +170,33 @@ export default function Page() {
                   if (i !== sectionData.questions.length - 1)
                     setActiveQuestion((p) => p + 1);
                   else {
-                    if (nextSectionLoading)
-                      await new Promise((resolve) =>
-                        emitter.once("loaded", resolve),
-                      );
-                    else
-                      await new Promise((resolve) => setTimeout(resolve, 1000));
-
                     setLoading(true);
+
+                    const newNumTests = numTests + 1;
+                    setNumTests(newNumTests);
 
                     const difficultyChange = ["-3", "-1", "0", "1", "3"][
                       numCorrect
                     ];
 
-                    console.log(nextSectionData, difficultyChange);
-                    setSectionData(nextSectionData[difficultyChange]);
-                    setActiveQuestion(0);
-                    setDifficulty(nextSectionData[difficultyChange].difficulty);
+                    await generateSection(
+                      clamp(0, difficulty + parseInt(difficultyChange), 10),
+                      newNumTests,
+                      theme,
+                    ).then((data) => {
+                      setSectionData(data);
+                      setActiveQuestion(0);
+                      setDifficulty(data.difficulty);
 
-                    containerRef.current.parentNode.parentNode.scrollTo({
-                      top: 0,
-                      behavior: "smooth",
+                      setLoading(false);
+
+                      containerRef.current.parentNode.parentNode.scrollTo({
+                        top: 0,
+                        behavior: "smooth",
+                      });
+
+                      // generateNextSections();
                     });
-
-                    setLoading(false);
-
-                    generateNextSections();
                   }
                 }}
               />
