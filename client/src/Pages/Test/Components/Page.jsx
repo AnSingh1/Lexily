@@ -3,6 +3,10 @@ import React, { useState, useEffect } from "react";
 import Question from "./Question";
 import Loading from "../../../Components/Loading";
 
+import EventEmitter from "eventemitter3";
+
+const emitter = new EventEmitter();
+
 export default function Page() {
   const [difficulty, setDifficulty] = useState(5); // Fetch from backend
   const [numCorrect, setNumCorrect] = useState(0);
@@ -12,6 +16,8 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [nextSectionLoading, setNextSectionLoading] = useState(true);
   const [error, setError] = useState();
+
+  const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
   const generateSection = async (difficulty, numTests, theme) => {
     const formData = new FormData();
@@ -29,28 +35,49 @@ export default function Page() {
     return data;
   };
 
+  const generateNextSections = async (numTests, theme) => {
+    const startTime = Date.now();
+    setNextSectionLoading(true);
+
+    // const d = [-3, -1, 0, 1, 3].reduce(async (a, c) => {
+    //   const data = await generateSection(
+    //     clamp(0, difficulty + c, 10),
+    //     numTests,
+    //     theme,
+    //   );
+
+    //   return {
+    //     ...a,
+    //     [c]: await data,
+    //   };
+    // }, {});
+
+    const diffs = [-3, -1, 0, 1, 3];
+    const data = {};
+
+    for (let i = 0; i < diffs.length; i++)
+      data[diffs[i]] = await generateSection(
+        clamp(0, difficulty + diffs[i], 10),
+        numTests,
+        theme,
+      );
+
+    console.log(
+      `Finished generating next diffs in ${(Date.now() - startTime) / 1000}s.`,
+    );
+
+    setNextSectionData(data);
+  };
+
   useEffect((_) => {
     const numTests = 0;
     const theme = new URLSearchParams(location.search).get("type"); // VALIDATE IN BACKEND
 
-    generateSection(difficulty, numTests, theme).then((data) =>
-      setSectionData(data),
-    );
+    generateSection(difficulty, numTests, theme).then((data) => {
+      setSectionData(data);
 
-    const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-
-    setNextSectionData(
-      [-3, -1, 0, 1, 3].reduce((a, c) => {
-        generateSection(clamp(0, difficulty + c, 10), numTests, theme)
-          .then((response) => response.json())
-          .then((data) => {
-            return {
-              ...a,
-              [c]: data,
-            };
-          });
-      }, {}),
-    );
+      generateNextSections(numTests, data.title);
+    });
   }, []);
 
   useEffect(
@@ -60,6 +87,18 @@ export default function Page() {
       setLoading(false);
     },
     [sectionData],
+  );
+
+  useEffect(
+    (_) => {
+      if (!nextSectionData) return;
+
+      console.log(nextSectionData);
+
+      setNextSectionLoading(false);
+      emitter.emit("loaded");
+    },
+    [nextSectionData],
   );
 
   return (
@@ -126,23 +165,31 @@ export default function Page() {
                 onSubmit={async (choice) => {
                   // Secure validation in the future
 
-                  if (choice == parseInt(question.answer)) {
-                    // Correct answer
+                  if (choice == parseInt(question.answer))
                     setNumCorrect((p) => p + 1);
-                    // difficulty++;
-                  } else {
-                    // Incorrect answer
-                    // difficulty--;
-                  }
 
                   if (i !== sectionData.questions.length - 1)
                     setActiveQuestion((p) => p + 1);
                   else {
-                    // Submit answers
-                  }
+                    if (nextSectionLoading)
+                      await new Promise((resolve) =>
+                        emitter.once("loaded", resolve),
+                      );
 
-                  // setLoading(true)
-                  // generate(new difficulty, new numTests, sectionData[0].title)
+                    setLoading(true);
+
+                    const difficultyChange = ["-3", "-1", "0", "1", "3"][
+                      numCorrect
+                    ];
+
+                    setSectionData(nextSectionData[difficultyChange]);
+                    setActiveQuestion(0);
+                    setDifficulty(nextSectionData[difficultyChange].difficulty);
+
+                    setLoading(false);
+
+                    generateNextSections();
+                  }
                 }}
               />
             );

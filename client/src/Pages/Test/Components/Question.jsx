@@ -14,6 +14,12 @@ export default function Question({ data, onSubmit }) {
     setLoading(false);
   };
 
+  useEffect((_) => {
+    [...document.querySelectorAll(".multipleChoiceOption")].forEach((e) => {
+      if (e.checked) e.checked = false;
+    });
+  }, []);
+
   return (
     <div
       className={`${
@@ -26,7 +32,7 @@ export default function Question({ data, onSubmit }) {
       <ul className="flex flex-col items-start text-base text-test-lgt dark:text-dark-test-lgt">
         {data.options.map((o, i) => {
           return (
-            <li key={i}>
+            <li className="multipleChoiceOption" key={i}>
               <input
                 type="radio"
                 id={`option-${i}`}
