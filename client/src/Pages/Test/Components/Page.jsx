@@ -2,14 +2,17 @@ import React, { useRef, useState, useEffect } from "react";
 
 import Question from "./Question";
 import Loading from "../../../Components/Loading";
+import Progress from "./Progress";
 
 export default function Page() {
   const containerRef = useRef();
 
   const [theme, setTheme] = useState();
   const [numTests, setNumTests] = useState();
-  const [difficulty, setDifficulty] = useState(); // Fetch from backend
+  const [numSectionsCompleted, setNumSectionsCompleted] = useState(0);
+  const [difficulty, setDifficulty] = useState();
   const [numCorrect, setNumCorrect] = useState(0);
+  const [totalNumCorrect, setTotalNumCorrect] = useState(0);
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [sectionData, setSectionData] = useState();
   const [loading, setLoading] = useState(true);
@@ -62,6 +65,7 @@ export default function Page() {
       ref={containerRef}
       className="relative mb-80 mt-12 flex w-[8.5in] flex-col gap-12 rounded border-gray-border/[.16] bg-white px-[9vw] py-24 dark:border-dark-gray-border/[.16] dark:bg-transparent sm:border-[1px] sm:dark:bg-dark-card/25"
     >
+      <Progress completed={numSectionsCompleted} />
       {loading && <Loading />}
       {!loading && (
         <>
@@ -125,8 +129,10 @@ export default function Page() {
                 onSubmit={async (choice) => {
                   // Secure validation in the future
 
-                  if (choice == parseInt(question.answer))
+                  if (choice == parseInt(question.answer)) {
                     setNumCorrect((p) => p + 1);
+                    setTotalNumCorrect((p) => p + 1);
+                  }
 
                   if (i !== sectionData.questions.length - 1)
                     setActiveQuestion((p) => p + 1);
@@ -157,6 +163,8 @@ export default function Page() {
                       window.localStorage.setItem("numTests", newNumTests);
 
                       setLoading(false);
+
+                      setNumSectionsCompleted((p) => p + 1);
 
                       containerRef.current.parentNode.parentNode.scrollTo({
                         top: 0,
