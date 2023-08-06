@@ -60,7 +60,7 @@ export default function Page() {
   return (
     <div
       ref={containerRef}
-      className="relative mb-80 mt-12 flex w-[8.5in] flex-col gap-12 rounded border-gray-border/[.16] bg-white px-[9vw] py-24 dark:border-dark-gray-border/[.16] dark:bg-dark-card/25 sm:border-[1px]"
+      className="relative mb-80 mt-12 flex w-[8.5in] flex-col gap-12 rounded border-gray-border/[.16] bg-white px-[9vw] py-24 dark:border-dark-gray-border/[.16] dark:bg-transparent sm:border-[1px] sm:dark:bg-dark-card/25"
     >
       {loading && <Loading />}
       {!loading && (
@@ -112,6 +112,7 @@ export default function Page() {
             return (
               <Question
                 key={i}
+                id={i}
                 data={{
                   question: question.question,
                   questionNumber: i + 1,

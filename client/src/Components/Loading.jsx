@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Loading({ dots = 3 }) {
   return (
-    <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center gap-3 rounded-2xl bg-white dark:bg-dark-card">
+    <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center gap-3 rounded bg-white dark:bg-transparent sm:dark:bg-dark-card">
       {[...Array(dots)].map((_, i) => {
         return (
           <div

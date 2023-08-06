@@ -38,6 +38,7 @@ export default function Header() {
       />
       <div className="flex items-center gap-4">
         <IconButton
+          id="DARKMODE"
           onClick={(_) =>
             setDarkModeEnabled((p) => (p === "true" ? "false" : "true"))
           }

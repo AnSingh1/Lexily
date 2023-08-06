@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import Loading from "../../../Components/Loading";
 
-export default function Question({ data, onSubmit }) {
+export default function Question({ data, onSubmit, id }) {
   const [selectedOption, setSelectedOption] = useState();
   const [loading, setLoading] = useState(false);
 
@@ -35,12 +35,12 @@ export default function Question({ data, onSubmit }) {
             <li className="multipleChoiceOption" key={i}>
               <input
                 type="radio"
-                id={`option-${i}`}
+                id={`option-${id}-${i}`}
                 name="answerChoice"
                 className="mr-3 cursor-pointer"
                 onClick={(_) => setSelectedOption(i)}
               />
-              <label htmlFor={`option-${i}`} className="cursor-pointer">
+              <label htmlFor={`option-${id}-${i}`} className="cursor-pointer">
                 {o}
               </label>
             </li>

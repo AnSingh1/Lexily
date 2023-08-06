@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +9,8 @@ import tests from "../../Utils/tests";
 import InfoButton from "../../Components/InfoButton";
 
 export default function Dashboard() {
+  const [customType, setCustomType] = useState();
+
   const navigate = useNavigate();
 
   const numTests = window.localStorage.getItem("numTests") || 0;
@@ -19,11 +21,14 @@ export default function Dashboard() {
         My Dashboard
       </h1>
       <div className="flex flex-col items-center gap-12 md:flex-row md:items-start md:justify-center">
-        <div className="h-max max-w-lg rounded-xl px-12 py-8 text-center shadow-xl dark:bg-dark-card">
+        <div
+          id="LEVELCARD"
+          className="h-max max-w-lg rounded-xl bg-white px-12 py-8 text-center shadow-xl dark:bg-dark-card"
+        >
           <h2 className="flex gap-3 font-poppins text-lg text-test-dark dark:text-dark-test-dark">
             Reading Level
             <InfoButton
-              text={`Your overall reading level, calculated from ${numTests} test${
+              text={`Your reading level, calculated from ${numTests} test${
                 numTests !== "1" ? "s" : ""
               }.`}
               id="level"
@@ -36,9 +41,16 @@ export default function Dashboard() {
             /10
           </h3>
         </div>
-        <div className="w-full max-w-lg rounded-xl px-12 py-8 shadow-xl dark:bg-dark-card">
-          <h2 className="font-poppins text-lg text-test-dark dark:text-dark-test-dark">
+        <div
+          id="THEMECARD"
+          className="w-full max-w-lg rounded-xl bg-white px-12 py-8 shadow-xl dark:bg-dark-card"
+        >
+          <h2 className="flex gap-3 font-poppins text-lg text-test-dark dark:text-dark-test-dark">
             Take a Test
+            <InfoButton
+              text="Generate a reading test from a theme."
+              id="prompt"
+            />
           </h2>
           <ul className="mt-6 grid flex-grow grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-3">
             {tests.map((test, i) => {
@@ -47,7 +59,7 @@ export default function Dashboard() {
                   onClick={(_) =>
                     navigate(`/test?type=${test.type.toLowerCase()}`)
                   }
-                  className="border-gray-border-[.08] flex cursor-pointer justify-between rounded-lg border-[1px] p-4 text-test-lgt hover:border-brand hover:text-brand dark:border-dark-gray-border dark:text-dark-test-lgt dark:hover:border-brand dark:hover:text-brand"
+                  className="border-gray-border-[.08] flex cursor-pointer justify-between rounded-lg border-[1px] bg-no-repeat p-4 text-test-lgt hover:border-brand hover:text-brand dark:border-dark-gray-border dark:text-dark-test-lgt dark:hover:border-brand dark:hover:text-brand"
                   key={i}
                 >
                   <h3 className="font-open text-base">{test.type}</h3>
@@ -55,6 +67,27 @@ export default function Dashboard() {
                 </li>
               );
             })}
+            <li
+              className={`${
+                customType ? "cursor-pointer" : "border-dashed opacity-50"
+              } border-gray-border-[.08] flex justify-between rounded-lg border-[1px] bg-no-repeat p-4 text-test-lgt dark:border-dark-gray-border dark:text-dark-test-lgt`}
+              onClick={(_) => {
+                if (customType)
+                  navigate(
+                    `/test?type=${customType
+                      .replaceAll(" ", "%20")
+                      .toLowerCase()}`,
+                  );
+              }}
+            >
+              <input
+                type="text"
+                placeholder="Custom"
+                className="font-open w-16 text-base focus-visible:outline-none"
+                onInput={(e) => setCustomType(e.target.value)}
+              />
+              <ChevronRight />
+            </li>
           </ul>
         </div>
       </div>
