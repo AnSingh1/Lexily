@@ -11,6 +11,7 @@ import {
 
 export default function Header() {
   const settingsRef = useRef();
+  const settingsButtonRef = useRef();
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [darkModeEnabled, setDarkModeEnabled] = useState(
@@ -26,7 +27,8 @@ export default function Header() {
       if (
         settingsRef.current &&
         targetExists &&
-        !settingsRef.current.contains(e.target)
+        !settingsRef.current.contains(e.target) &&
+        e.target !== settingsButtonRef.current
       ) {
         setSettingsOpen(false);
       }
@@ -47,6 +49,7 @@ export default function Header() {
       />
       <div className="flex items-center gap-4">
         <Settings
+          ref={settingsButtonRef}
           onClick={(_) => setSettingsOpen((p) => !p)}
           className={`${
             settingsOpen ? "rotate-90" : "rotate-0"

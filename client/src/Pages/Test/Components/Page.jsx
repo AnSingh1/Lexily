@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 import Question from "./Question";
 import Loading from "../../../Components/Loading";
@@ -8,6 +8,8 @@ import EventEmitter from "eventemitter3";
 const emitter = new EventEmitter();
 
 export default function Page() {
+  const containerRef = useRef();
+
   const [difficulty, setDifficulty] = useState(5); // Fetch from backend
   const [numCorrect, setNumCorrect] = useState(0);
   const [activeQuestion, setActiveQuestion] = useState(0);
@@ -76,7 +78,7 @@ export default function Page() {
     generateSection(difficulty, numTests, theme).then((data) => {
       setSectionData(data);
 
-      generateNextSections(numTests, data.title);
+      generateNextSections(numTests, /*data.title*/ theme);
     });
   }, []);
 
@@ -101,8 +103,18 @@ export default function Page() {
     [nextSectionData],
   );
 
+  useEffect(
+    (_) => {
+      console.log(nextSectionData);
+    },
+    [nextSectionLoading],
+  );
+
   return (
-    <div className="relative mb-80 mt-12 flex w-[8.5in] flex-col gap-12 rounded border-gray-border/[.16] bg-white px-[9vw] py-24 dark:border-dark-gray-border/[.16] dark:bg-dark-card/25 sm:border-[1px]">
+    <div
+      ref={containerRef}
+      className="relative mb-80 mt-12 flex w-[8.5in] flex-col gap-12 rounded border-gray-border/[.16] bg-white px-[9vw] py-24 dark:border-dark-gray-border/[.16] dark:bg-dark-card/25 sm:border-[1px]"
+    >
       {loading && <Loading />}
       {!loading && (
         <>
@@ -175,6 +187,8 @@ export default function Page() {
                       await new Promise((resolve) =>
                         emitter.once("loaded", resolve),
                       );
+                    else
+                      await new Promise((resolve) => setTimeout(resolve, 1000));
 
                     setLoading(true);
 
@@ -182,9 +196,15 @@ export default function Page() {
                       numCorrect
                     ];
 
+                    console.log(nextSectionData, difficultyChange);
                     setSectionData(nextSectionData[difficultyChange]);
                     setActiveQuestion(0);
                     setDifficulty(nextSectionData[difficultyChange].difficulty);
+
+                    containerRef.current.parentNode.parentNode.scrollTo({
+                      top: 0,
+                      behavior: "smooth",
+                    });
 
                     setLoading(false);
 

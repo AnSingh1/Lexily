@@ -51,6 +51,8 @@ def generate():
     Within each question object, provide an array of 4 potential answers to the object's question. There should be only one correct answer. It should be created with the following format: "options": [<option0>, <option1>, <option2>, <option3>], where each item in the array is to be replaced with one of the generated options. Do not include any extra characters in each option.
     Within each question object, provide the index of the correct answer to the question. It should be either 0, 1, 2, or 3. It should be created with the following format: "answer": <answer>, where <answer> is to be replaced with the index of the correct answer. 
 
+    MAKE SURE TO PLACE A COMMA SEPARATING EACH KEY-VALUE PAIR.
+
     Here is an example of a proper response:
     
     {

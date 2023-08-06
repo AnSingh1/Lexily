@@ -859,6 +859,10 @@ input[type="radio"]:checked::before {
   overflow-y: auto;
 }
 
+.overflow-y-hidden{
+  overflow-y: hidden;
+}
+
 .rounded{
   border-radius: 0.25rem;
 }
@@ -1082,10 +1086,6 @@ input[type="radio"]:checked::before {
 
 .underline{
   text-decoration-line: underline;
-}
-
-.opacity-0{
-  opacity: 0;
 }
 
 .shadow-lg{
