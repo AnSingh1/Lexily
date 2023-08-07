@@ -22,6 +22,21 @@ export default {
         roboto: ["roboto", "sans-serif"],
         poppins: ["poppins", "sans-serif"],
       },
+      keyframes: {
+        "slide-down": {
+          from: {
+            opacity: 0,
+            transform: "translateY(-50px)",
+          },
+          to: {
+            opacity: 1,
+            transform: "translateY(0)",
+          },
+        },
+      },
+      animation: {
+        "slide-down": "slide-down 500ms ease-out forwards",
+      },
     },
   },
   plugins: [],

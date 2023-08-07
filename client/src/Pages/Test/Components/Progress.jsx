@@ -4,8 +4,8 @@ import { SportsScore } from "@mui/icons-material";
 
 export default function Progress({ completed }) {
   return (
-    <div className="fixed bottom-8 left-1/2 flex h-max w-max -translate-x-1/2 flex-row items-center lg:bottom-1/2 lg:left-auto lg:right-8 lg:translate-x-0 lg:translate-y-1/2 lg:flex-col">
-      {[...Array(4)].map((_, i) => {
+    <div className="fixed bottom-8 left-1/2 z-[999] flex h-max w-max -translate-x-1/2 flex-row items-center lg:bottom-1/2 lg:left-auto lg:right-8 lg:translate-x-0 lg:translate-y-1/2 lg:flex-col">
+      {[...Array(3)].map((_, i) => {
         return (
           <>
             <div
@@ -37,7 +37,7 @@ export default function Progress({ completed }) {
       >
         <SportsScore
           className={
-            completed === 4
+            completed === 3
               ? "text-brand"
               : "text-gray-border/[.16] dark:text-dark-gray-border/[.16]"
           }

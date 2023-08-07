@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Question from "./Question";
 import Loading from "../../../Components/Loading";
@@ -11,12 +12,16 @@ export default function Page() {
   const [numTests, setNumTests] = useState();
   const [numSectionsCompleted, setNumSectionsCompleted] = useState(0);
   const [difficulty, setDifficulty] = useState();
+  const [startingDifficulty, setStartingDifficulty] = useState();
   const [numCorrect, setNumCorrect] = useState(0);
   const [totalNumCorrect, setTotalNumCorrect] = useState(0);
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [sectionData, setSectionData] = useState();
   const [loading, setLoading] = useState(true);
+  const [finished, setFinished] = useState(false);
   const [error, setError] = useState();
+
+  const navigate = useNavigate();
 
   const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
@@ -41,6 +46,7 @@ export default function Page() {
     const numTests = parseInt(window.localStorage.getItem("numTests")) || 0;
 
     setDifficulty(difficulty);
+    setStartingDifficulty(difficulty);
     setNumTests(numTests);
 
     const theme = new URLSearchParams(location.search).get("type"); // VALIDATE IN BACKEND
@@ -65,6 +71,44 @@ export default function Page() {
       ref={containerRef}
       className="relative mb-80 mt-12 flex w-[8.5in] flex-col gap-12 rounded border-gray-border/[.16] bg-white px-[9vw] py-24 dark:border-dark-gray-border/[.16] dark:bg-transparent sm:border-[1px] sm:dark:bg-dark-card/25"
     >
+      {finished && (
+        <div className="fixed left-0 top-0 z-[999] flex h-full w-full flex-col items-center justify-center gap-6 bg-black/30 backdrop-blur-sm">
+          <div className="flex animate-slide-down flex-col gap-12 rounded-xl bg-white p-12 shadow-xl dark:bg-dark-card sm:flex-row">
+            <div>
+              <h1 className="font-poppins text-2xl text-test-dark dark:text-dark-test-dark">
+                Test complete! 🎉
+              </h1>
+              <span className="font-open text-test-lgt dark:text-dark-test-lgt">
+                You are now level {difficulty}.
+              </span>
+            </div>
+            <p className="font-open flex items-center gap-6 text-test-lgt dark:text-dark-test-lgt">
+              <div
+                className="grid h-20 w-20 place-items-center rounded-full text-white dark:text-dark-card"
+                style={{
+                  background: `radial-gradient(closest-side, currentColor 77%, transparent 80% 100%), conic-gradient(#3EB489 ${
+                    (totalNumCorrect / 16) * 100
+                  }%, rgba(0, 0, 0, .25) 0)`,
+                }}
+              >
+                <span className="font-roboto text-sm text-test-lgt dark:text-dark-test-lgt">
+                  {totalNumCorrect}/16
+                </span>
+              </div>
+              <span className="font-poppins text-3xl">
+                {startingDifficulty} →{" "}
+                <span className="text-brand">{difficulty}</span>
+              </span>
+            </p>
+          </div>
+          <button
+            onClick={(_) => navigate("/")}
+            className="animate-slide-down rounded-lg bg-brand px-12 py-4 font-poppins text-white"
+          >
+            Back to dashboard
+          </button>
+        </div>
+      )}
       <Progress completed={numSectionsCompleted} />
       {loading && <Loading />}
       {!loading && (
@@ -136,7 +180,14 @@ export default function Page() {
 
                   if (i !== sectionData.questions.length - 1)
                     setActiveQuestion((p) => p + 1);
-                  else {
+                  else if (numSectionsCompleted + 1 === 3) {
+                    setLoading(true);
+
+                    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+                    setNumSectionsCompleted((p) => p + 1);
+                    setFinished(true);
+                  } else {
                     setLoading(true);
 
                     const newNumTests = numTests + 1;
