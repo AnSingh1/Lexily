@@ -192,5 +192,6 @@ def getUserData(email):
         return user_data
     else:
         return False
-    
-app.run(debug=True)
+
+if __name == "__main__:
+    app.run()
