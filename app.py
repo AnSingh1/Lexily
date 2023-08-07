@@ -42,7 +42,7 @@ def generate():
     data = request.form
 
     instruction = """You are a reading guide that generates reading sections and answers. Based on the user's difficulty and number of tests, you are to generate
-    the appropriate reading passage. All content should be on the same topic and related to the theme. Everything should be generated within the same JSON object using key-value pairs.
+    the appropriate reading passage. The passage should be made up of multiple paragraphs. All content should be on the same topic and related to the theme. Everything should be generated within the same JSON object using key-value pairs.
     
     Provide a passage relating to the provided prompt within the JSON object. It should be created with the following format: "passage": <passage>, where <passage> is to be replaced with the generated passage. Be sure to include a comma after the passage to follow the json format.
     Provide a title for the passage. It should be created with the following format: "title": <title>, where <title> is to be replaced with the generated title.
@@ -52,6 +52,7 @@ def generate():
     Provide the index of the correct answer in the questions array. It should be either 0, 1, 2, or 3. It should be created with the following format: "answer": <answer>, where <answer> is to be replaced with the index of the correct answer.
     
     Do not add extra text of any kind to any of the values. This means no bullet points, no denoting a question with "Question: ", etc.
+    MAKE SURE TO PLACE A COMMA SEPARATING EACH KEY-VALUE PAIR.
     
     Here is an example of a proper response:
     
@@ -109,27 +110,20 @@ def generate():
 
     messages = [{"role": "system", "content": instruction}, {"role": "user", "content": initial}]
 
-    try:
-        response = openai.ChatCompletion.create(
-            model = "gpt-3.5-turbo",
-            messages = messages
-        )
-        result = response["choices"][0]["message"]["content"]
-        print("Result")
-        print(result)
+    questions_data = None
 
-        questions_data = json.loads(result, strict=False)
-        questions_data["difficulty"] = int(data["difficulty"])
+    while not questions_data:
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=messages
+            )
+            result = response["choices"][0]["message"]["content"]
 
-
-
-
-
-
-    except Exception as e:
-        print(e)
-        return jsonify({"message": e})
-
+            questions_data = json.loads(result, strict=False)
+            questions_data["difficulty"] = int(data["difficulty"])
+        except Exception as e:
+            print(e)
 
     print(questions_data)
     return jsonify(questions_data)

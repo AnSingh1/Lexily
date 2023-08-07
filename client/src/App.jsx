@@ -13,7 +13,7 @@ import Test from "./Pages/Test/Test";
 export default function App() {
   return (
     <Router>
-      <div className="flex min-h-screen flex-col overflow-y-hidden dark:bg-dark-bg">
+      <div className="flex flex-col overflow-y-hidden dark:bg-dark-bg">
         {!window.localStorage.getItem("visited") && (
           <div className="fixed left-0 top-0 z-[999] flex h-full w-full flex-col items-center justify-center gap-6 bg-black/60 px-8 text-center backdrop-blur-sm">
             <h1 className="font-poppins text-4xl text-white">
@@ -61,6 +61,11 @@ export default function App() {
             />
           </Routes>
         </div>
+        <img
+          src="/logo-small.svg"
+          alt=""
+          className="absolute bottom-0 left-8 h-32 opacity-0 mix-blend-soft-light grayscale lg:opacity-25"
+        />
       </div>
     </Router>
   );

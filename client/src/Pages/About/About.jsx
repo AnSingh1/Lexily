@@ -2,11 +2,11 @@ import React from "react";
 
 export default function About() {
   return (
-    <div className="flex w-full flex-col items-center gap-6 py-12 text-center">
+    <div className="flex w-full flex-col items-center gap-6 px-12 py-12 text-center">
       <h2 className="font-poppins text-2xl text-test-dark dark:text-dark-test-dark">
         What is Lexily?
       </h2>
-      <p className="max-w-xl font-sans text-lg text-test-lgt dark:text-dark-test-lgt">
+      <p className="max-w-xl font-sans text-test-lgt dark:text-dark-test-lgt">
         Lexily is a web app which aims to make literary tests more enjoyable for
         both the student and the teacher. No student wants to take a test on a
         topic they don't care about, so Lexily gives the power of deciding the
@@ -19,7 +19,7 @@ export default function About() {
       <h2 className="font-poppins text-2xl text-test-dark dark:text-dark-test-dark">
         Why did we make Lexily?
       </h2>
-      <p className="max-w-xl font-sans text-lg text-test-lgt dark:text-dark-test-lgt">
+      <p className="max-w-xl font-sans text-test-lgt dark:text-dark-test-lgt">
         We developers of Lexily share a passion for reading, yet feel as though
         schools, especially in earlier years, are hurting the reading skills
         development process through the classical "reading check" approach. In
@@ -39,7 +39,7 @@ export default function About() {
       <h2 className="font-poppins text-2xl text-test-dark dark:text-dark-test-dark">
         How might Lexily expand in the future?
       </h2>
-      <p className="max-w-xl font-sans text-lg text-test-lgt dark:text-dark-test-lgt">
+      <p className="max-w-xl font-sans text-test-lgt dark:text-dark-test-lgt">
         Lexily is by no means the first dive into adaptive testing thats been
         taken, and it certainly won't be the last. The incredible surge of
         recent machine learning advancement has enabled us to make these types

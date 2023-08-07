@@ -5,7 +5,7 @@ import { SportsScore } from "@mui/icons-material";
 export default function Progress({ completed }) {
   return (
     <div className="fixed bottom-8 left-1/2 z-[999] flex h-max w-max -translate-x-1/2 flex-row items-center lg:bottom-1/2 lg:left-auto lg:right-8 lg:translate-x-0 lg:translate-y-1/2 lg:flex-col">
-      {[...Array(3)].map((_, i) => {
+      {[...Array(4)].map((_, i) => {
         return (
           <>
             <div
@@ -30,14 +30,14 @@ export default function Progress({ completed }) {
       })}
       <div
         className={`${
-          completed === 3
+          completed === 4
             ? "border-brand"
             : "border-gray-border/[.16] dark:border-dark-gray-border/[.16]"
         } grid h-10 w-10 place-items-center rounded-full border-2`}
       >
         <SportsScore
           className={
-            completed === 3
+            completed === 4
               ? "text-brand"
               : "text-gray-border/[.16] dark:text-dark-gray-border/[.16]"
           }

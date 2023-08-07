@@ -1,29 +1,22 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-
-import Confetti from "react-confetti";
 
 import Question from "./Question";
 import Loading from "../../../Components/Loading";
 import Progress from "./Progress";
+import Finish from "./Finish";
 
 export default function Page() {
   const containerRef = useRef();
+  const numCorrect = useRef(0);
 
-  const [theme, setTheme] = useState();
   const [numTests, setNumTests] = useState();
-  const [numSectionsCompleted, setNumSectionsCompleted] = useState(0);
   const [difficulty, setDifficulty] = useState();
   const [startingDifficulty, setStartingDifficulty] = useState();
-  const [numCorrect, setNumCorrect] = useState(0);
-  const [totalNumCorrect, setTotalNumCorrect] = useState(0);
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [sectionData, setSectionData] = useState();
   const [loading, setLoading] = useState(true);
   const [finished, setFinished] = useState(false);
   const [error, setError] = useState();
-
-  const navigate = useNavigate();
 
   const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
@@ -50,9 +43,9 @@ export default function Page() {
     setDifficulty(difficulty);
     setStartingDifficulty(difficulty);
     setNumTests(numTests);
+    numCorrect.current = 0;
 
     const theme = new URLSearchParams(location.search).get("type"); // VALIDATE IN BACKEND
-    setTheme(theme);
 
     generateSection(difficulty, numTests, theme).then((data) =>
       setSectionData(data),
@@ -63,6 +56,7 @@ export default function Page() {
     (_) => {
       if (!sectionData) return;
 
+      numCorrect.current = 0;
       setLoading(false);
     },
     [sectionData],
@@ -71,52 +65,16 @@ export default function Page() {
   return (
     <div
       ref={containerRef}
-      className="relative mb-80 mt-12 flex w-[8.5in] flex-col gap-12 rounded border-gray-border/[.16] bg-white px-[9vw] py-24 dark:border-dark-gray-border/[.16] dark:bg-transparent sm:border-[1px] sm:dark:bg-dark-card/25"
+      className="relative mb-96 mt-12 flex w-[8.5in] flex-col gap-12 rounded border-gray-border/[.16] bg-white px-[9vw] py-24 dark:border-dark-gray-border/[.16] dark:bg-transparent sm:border-[1px] sm:dark:bg-dark-card/25"
     >
       {finished && (
-        <div className="fixed left-0 top-0 z-[999] flex h-full w-full flex-col items-center justify-center gap-6 bg-black/30 backdrop-blur-sm">
-          <Confetti
-            width={window.innerWidth}
-            height={window.innerHeight}
-            numberOfPieces={150}
-          />
-          <div className="flex animate-slide-down flex-col gap-12 rounded-xl bg-white p-12 shadow-xl dark:bg-dark-card sm:flex-row">
-            <div>
-              <h1 className="font-poppins text-2xl text-test-dark dark:text-dark-test-dark">
-                Test complete! 🎉
-              </h1>
-              <span className="font-open text-test-lgt dark:text-dark-test-lgt">
-                You are now level {difficulty}.
-              </span>
-            </div>
-            <div className="font-open flex items-center gap-6 text-test-lgt dark:text-dark-test-lgt">
-              <div
-                className="grid h-20 w-20 place-items-center rounded-full text-white dark:text-dark-card"
-                style={{
-                  background: `radial-gradient(closest-side, currentColor 77%, transparent 80% 100%), conic-gradient(#3EB489 ${
-                    (totalNumCorrect / 12) * 100
-                  }%, rgba(0, 0, 0, .25) 0)`,
-                }}
-              >
-                <span className="font-roboto text-sm text-test-lgt dark:text-dark-test-lgt">
-                  {totalNumCorrect}/16
-                </span>
-              </div>
-              <span className="font-poppins text-3xl">
-                {startingDifficulty} →{" "}
-                <span className="text-brand">{difficulty}</span>
-              </span>
-            </div>
-          </div>
-          <button
-            onClick={(_) => navigate("/")}
-            className="animate-slide-down rounded-lg bg-brand px-12 py-4 font-poppins text-white"
-          >
-            Back to dashboard
-          </button>
-        </div>
+        <Finish
+          numCorrect={numCorrect.current}
+          endingDifficulty={difficulty}
+          startingDifficulty={startingDifficulty}
+        />
       )}
-      <Progress completed={numSectionsCompleted} />
+      <Progress completed={activeQuestion} />
       {loading && <Loading />}
       {!loading && (
         <>
@@ -180,57 +138,35 @@ export default function Page() {
                 onSubmit={async (choice) => {
                   // Secure validation in the future
 
-                  if (choice == parseInt(question.answer)) {
-                    setNumCorrect((p) => p + 1);
-                    setTotalNumCorrect((p) => p + 1);
-                  }
+                  if (choice == parseInt(question.answer)) numCorrect.current++;
 
                   if (i !== sectionData.questions.length - 1)
                     setActiveQuestion((p) => p + 1);
-                  else if (numSectionsCompleted + 1 === 3) {
-                    setLoading(true);
-
-                    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-                    setNumSectionsCompleted((p) => p + 1);
-                    setFinished(true);
-                  } else {
+                  else {
                     setLoading(true);
 
                     const newNumTests = numTests + 1;
+
                     setNumTests(newNumTests);
+                    window.localStorage.setItem("numTests", newNumTests);
 
                     const difficultyChange = ["-2", "-2", "-1", "1", "2"][
-                      numCorrect
+                      numCorrect.current
                     ];
 
-                    await generateSection(
-                      clamp(0, difficulty + parseInt(difficultyChange), 10),
-                      newNumTests,
-                      theme,
-                    ).then((data) => {
-                      setSectionData(data);
-                      setNumCorrect(0);
-                      setActiveQuestion(0);
-                      setDifficulty(data.difficulty);
+                    const newDifficulty = clamp(
+                      0,
+                      startingDifficulty + parseInt(difficultyChange),
+                      10,
+                    );
 
-                      window.localStorage.setItem(
-                        "difficulty",
-                        data.difficulty,
-                      );
-                      window.localStorage.setItem("numTests", newNumTests);
+                    setDifficulty(newDifficulty);
+                    window.localStorage.setItem("difficulty", newDifficulty);
 
-                      setLoading(false);
+                    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-                      setNumSectionsCompleted((p) => p + 1);
-
-                      containerRef.current.parentNode.parentNode.scrollTo({
-                        top: 0,
-                        behavior: "smooth",
-                      });
-
-                      // generateNextSections();
-                    });
+                    setActiveQuestion((p) => p + 1);
+                    setFinished(true);
                   }
                 }}
               />
