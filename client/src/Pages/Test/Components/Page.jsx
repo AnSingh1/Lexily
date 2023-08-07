@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import Confetti from "react-confetti";
+
 import Question from "./Question";
 import Loading from "../../../Components/Loading";
 import Progress from "./Progress";
@@ -73,6 +75,11 @@ export default function Page() {
     >
       {finished && (
         <div className="fixed left-0 top-0 z-[999] flex h-full w-full flex-col items-center justify-center gap-6 bg-black/30 backdrop-blur-sm">
+          <Confetti
+            width={window.innerWidth}
+            height={window.innerHeight}
+            numberOfPieces={150}
+          />
           <div className="flex animate-slide-down flex-col gap-12 rounded-xl bg-white p-12 shadow-xl dark:bg-dark-card sm:flex-row">
             <div>
               <h1 className="font-poppins text-2xl text-test-dark dark:text-dark-test-dark">
@@ -82,7 +89,7 @@ export default function Page() {
                 You are now level {difficulty}.
               </span>
             </div>
-            <p className="font-open flex items-center gap-6 text-test-lgt dark:text-dark-test-lgt">
+            <div className="font-open flex items-center gap-6 text-test-lgt dark:text-dark-test-lgt">
               <div
                 className="grid h-20 w-20 place-items-center rounded-full text-white dark:text-dark-card"
                 style={{
@@ -99,7 +106,7 @@ export default function Page() {
                 {startingDifficulty} →{" "}
                 <span className="text-brand">{difficulty}</span>
               </span>
-            </p>
+            </div>
           </div>
           <button
             onClick={(_) => navigate("/")}

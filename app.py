@@ -51,6 +51,8 @@ def generate():
     Provide an array of four options for each question, 16 options total. Only one should be the correct answer. It should be created with the following format: "options": [<option0>, <option1>, <option2>, <option3>], where each item in the array is to be replaced with one of the generated options.
     Provide the index of the correct answer in the questions array. It should be either 0, 1, 2, or 3. It should be created with the following format: "answer": <answer>, where <answer> is to be replaced with the index of the correct answer.
     
+    Do not add extra text of any kind to any of the values. This means no bullet points, no denoting a question with "Question: ", etc.
+    
     Here is an example of a proper response:
     
      {

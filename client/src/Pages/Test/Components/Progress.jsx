@@ -30,7 +30,7 @@ export default function Progress({ completed }) {
       })}
       <div
         className={`${
-          completed === 4
+          completed === 3
             ? "border-brand"
             : "border-gray-border/[.16] dark:border-dark-gray-border/[.16]"
         } grid h-10 w-10 place-items-center rounded-full border-2`}
