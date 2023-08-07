@@ -94,7 +94,7 @@ export default function Page() {
                 className="grid h-20 w-20 place-items-center rounded-full text-white dark:text-dark-card"
                 style={{
                   background: `radial-gradient(closest-side, currentColor 77%, transparent 80% 100%), conic-gradient(#3EB489 ${
-                    (totalNumCorrect / 16) * 100
+                    (totalNumCorrect / 12) * 100
                   }%, rgba(0, 0, 0, .25) 0)`,
                 }}
               >
