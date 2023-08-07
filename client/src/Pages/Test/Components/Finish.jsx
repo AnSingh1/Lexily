@@ -51,7 +51,7 @@ export default function Finish({
             onClick={(_) => navigate("/")}
             className="rounded-lg border-[1px] border-gray-border/[.16] px-12 py-4 font-poppins text-gray-border/[.16] hover:border-gray-border/[.32] hover:text-gray-border/[.32] dark:border-dark-gray-border/[.16] dark:text-dark-gray-border/[.16] dark:hover:border-dark-gray-border/[.32] dark:hover:text-dark-gray-border/[.32]"
           >
-            Back
+            Home
           </button>
           <button
             onClick={(_) => navigate(0)}
