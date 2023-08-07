@@ -187,5 +187,5 @@ def getUserData(email):
     else:
         return False
 
-if __name == "__main__:
+if __name__ == "__main__":
     app.run()
