@@ -17,7 +17,7 @@ export default function Header() {
   useEffect(
     (_) => {
       if (darkModeEnabled === undefined)
-        setDarkModeEnabled(window.localStorage.getItem("dark") || false);
+        setDarkModeEnabled(window.localStorage.getItem("dark") || "true");
 
       if (darkModeEnabled === "true")
         document.documentElement.classList.add("dark");

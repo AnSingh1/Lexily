@@ -15,7 +15,7 @@ export default function App() {
     <Router>
       <div className="flex flex-col overflow-y-hidden dark:bg-dark-bg">
         {!window.localStorage.getItem("visited") && (
-          <div className="fixed left-0 top-0 z-[999] flex h-full w-full flex-col items-center justify-center gap-6 bg-black/60 px-8 text-center backdrop-blur-sm">
+          <div className="fixed left-0 top-0 z-[999] flex h-full w-full flex-col items-center justify-center gap-6 bg-black/60 px-8 text-center">
             <h1 className="font-poppins text-4xl text-white">
               Welcome to Lexily! 👋
             </h1>
