@@ -29,4 +29,5 @@ We, developers of Lexily, share a passion for reading, yet feel as though school
 6. Run app.py
 
 Lexily was developed in 5 days for [DualHacks 2023](https://www.codology.org/post/dualhacks-empowering-young-minds-to-transform-education).
+<br>
 View our submission on [Devpost](https://devpost.com/software/lexily).
