@@ -1624,6 +1624,10 @@ input[type="radio"]:checked::before {
 }
 
 @media (min-width: 1280px){
+  .xl\:block{
+    display: block;
+  }
+
   .xl\:opacity-25{
     opacity: 0.25;
   }

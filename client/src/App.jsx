@@ -64,7 +64,7 @@ export default function App() {
         <img
           src="/logo-small.svg"
           alt=""
-          className="absolute bottom-0 left-8 h-32 opacity-0 mix-blend-soft-light grayscale xl:opacity-25"
+          className="absolute bottom-0 left-8 hidden h-32 opacity-0 mix-blend-soft-light grayscale xl:block xl:opacity-25"
         />
       </div>
     </Router>
