@@ -20,4 +20,12 @@ We, developers of Lexily, share a passion for reading, yet feel as though school
 
 <br>
 
+## Lexily local setup
+1. Clone the repository using `git clone https://github.com/AnSingh1/Lexily.git`
+2. CD to the directory
+3. Have python installed
+4. Run `pip install -r requirements.txt` to install all of the necessary packages
+5. Put your OpenAI Api in the .env file
+6. Run app.py
+
 Lexily was developed in 5 days for [DualHacks 2023](https://www.codology.org/post/dualhacks-empowering-young-minds-to-transform-education).
