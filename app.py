@@ -1,6 +1,4 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
-import firebase_admin
-from firebase_admin import db, credentials
 import json
 
 import openai
@@ -9,10 +7,6 @@ import os
 
 load_dotenv()
 openai.api_key = os.environ.get('API_KEY')
-openai.api_base = os.environ.get('API_BASE')
-
-cred = credentials.Certificate(json.loads(os.environ.get("FIREBASE_KEY")))
-firebase_admin.initialize_app(cred, {'databaseURL': 'https://lexily-9bc6b-default-rtdb.firebaseio.com/'})
 
 difficulty_desc = {10: "give extremely tough questions. Use complex words for the question and passage. Make the passage about something extremely niche.", 9: "make the passage about something niche, use complex words for the passage but semi-complex words for the questions. The questions must require critical thinking. ", 8: "Make the passage about something very niche, use complex words for the passage but medium complexity words for the questions. Questions should require critical thinking.", 7: "make the passage about something very niche and use complex words for the passage. Questions should require critical thinking.", 6:"make the passage about something niche and require the passage to be fully understood to be able to understand the questions. Use semi-complex words for the passage.", 5:"make the passage niche and require a complex understanding of the passage to answer the questions.", 4:"make the passage unique and require understanding in order to answer the questions.", 3: "make the passage semi-unique, the user should not be able to guess the questions right.", 2: "use complex words for the questions.", 1: "use simple terms and a generic passage.", 0: "use simple terms for everything and give a very generic passage."}
 
@@ -131,61 +125,4 @@ def generate():
 
 
 
-@app.route('/signup', methods = ["POST"])
-def signup():
-    data = request.form
-
-    if getUserData(data["email"]):
-        return jsonify({"message": "Account already exists"})
-    else:
-        addUser(data["name"], data["email"], data["password"], data["difficulty"], data["numTests"])
-
-        return jsonify({"message": "success", "email": data["email"]})
-
-@app.route('/login', methods = ["POST"])
-def login():
-    data = request.form
-
-    user_data = getUserData(data["email"])
-    if user_data:
-        if user_data['password'] == data["password"]:
-            return jsonify({"message": "success", "email": data["email"], "difficulty": user_data['difficulty'], "numTests": user_data['numTests']})
-        else:
-            return jsonify({"message": "incorrect password"})
-    else:
-        return jsonify({"message": "Account does not exist"})
-
-@app.route('/update')
-def updateUser():
-    data = request.form
-
-    ref = db.reference('users')
-    users_ref = ref.child(data["email"].replace('.', ','))
-
-    users_ref.update({
-        "difficulty": data["difficulty"],
-        "numTests": data["numTests"],
-    })
-
-def addUser(name, email, password, difficulty, numTests):
-    ref = db.reference('users')
-    users_ref = ref.child(email.replace('.', ','))
-    users_ref.set({
-        "name": name,
-        "email": email,
-        "password": password,
-        "difficulty": difficulty,
-        "numTests": numTests,
-    })
-
-def getUserData(email):
-    ref = db.reference('users')
-    users_ref = ref.child(email.replace('.', ','))  # Replace '.' with ','
-    user_data = users_ref.get()
-    if user_data:
-        return user_data
-    else:
-        return False
-
-if __name__ == "__main__":
     app.run()
