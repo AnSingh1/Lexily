@@ -28,7 +28,7 @@ We, developers of Lexily, share a passion for reading, yet feel as though school
 5. Put your OpenAI Api in the .env file
 6. Run app.py
 
-Lexily was developed in 5 days for [DualHacks 2023](https://www.codology.org/post/dualhacks-empowering-young-minds-to-transform-education).
+Lexily was developed in 5 days for [DualHacks 2023](https://www.codology.org/post/dualhacks-empowering-young-minds-to-transform-education).<br>
 Result: 5th place Advanced
 <br>
 View our submission on [Devpost](https://devpost.com/software/lexily).
